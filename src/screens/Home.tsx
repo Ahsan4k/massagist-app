@@ -1,0 +1,70 @@
+import React from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+
+const {width, height} = Dimensions.get('window');
+
+const Home = props => {
+  const list = [
+    {
+      image: require('../assets/Rectangle6.png'),
+      text: 'Body Massage',
+    },
+    {
+      image: require('../assets/Rectangle5.png'),
+      text: 'Reflexology(Foot)',
+    },
+  ];
+
+  const onPress = (item: string) => {
+    item == 'Body Massage'
+      ? props.navigation.navigate('Body', {type: 'Body'})
+      : props.navigation.navigate('Reflex', {type: 'Reflexology'});
+  };
+  return (
+    <View style={styles.window}>
+      {list.map((item, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.option}
+          onPress={() => onPress(item.text)}>
+          <Image source={item.image} style={styles.img} />
+          <Text style={styles.text}>{item.text}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+};
+
+export default Home;
+
+const styles = StyleSheet.create({
+  window: {
+    width: width,
+    height: height,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#AE1F31',
+  },
+  option: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  img: {
+    width: width * 0.9,
+    height: height * 0.3,
+    borderRadius: 10,
+  },
+  text: {
+    marginTop: 10,
+    fontFamily: 'SF-Pro-Text-Bold',
+    fontSize: 15,
+    color: 'white',
+  },
+});

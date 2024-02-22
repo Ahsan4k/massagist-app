@@ -1,0 +1,128 @@
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from 'react-native';
+import React from 'react';
+import {useDispatch} from 'react-redux';
+import {login} from '../redux/authSlice';
+
+const {width, height} = Dimensions.get('window');
+
+const Login = props => {
+  const {useState} = React;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  return (
+    <View style={styles.view}>
+      <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
+      <Text style={styles.head}>Login</Text>
+      <View style={styles.inner}>
+        <KeyboardAvoidingView behavior="padding">
+          <Text style={styles.text}>Email</Text>
+          <TextInput
+            style={styles.email}
+            onChange={(email: string) => setEmail(email)}
+            value={email}
+            placeholder="Enter Email"
+          />
+          <Text style={styles.text}>Password</Text>
+          <TextInput
+            style={styles.email}
+            onChange={(pass: string) => setPassword(pass)}
+            value={password}
+            placeholder="Enter Password"
+          />
+        </KeyboardAvoidingView>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => dispatch(login())}>
+          <Text style={styles.btnText}>Login</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.dont}>
+        <Text style={{color: 'white', fontFamily: 'SF-Pro-Text-Light'}}>
+          Don't have an account?
+        </Text>
+        <Text
+          style={{
+            color: 'white',
+            fontFamily: 'SF-Pro-Text-Light',
+            textDecorationLine: 'underline',
+          }}
+          onPress={() => props.navigation.navigate('SignUp')}>
+          SignUp
+        </Text>
+      </View>
+    </View>
+  );
+};
+
+export default Login;
+
+const styles = StyleSheet.create({
+  view: {
+    width: width,
+    height: height,
+    backgroundColor: '#AE1F31',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inner: {
+    backgroundColor: 'white',
+    width: width * 0.9,
+    height: height * 0.37,
+    borderRadius: 10,
+    marginTop: 20,
+    // alignItems: 'center',
+    paddingTop: 20,
+  },
+  head: {
+    fontSize: 25,
+    color: 'white',
+    fontFamily: 'SF-Pro-Text-Bold',
+    marginTop: 20,
+  },
+  logo: {
+    width: 169,
+    height: 119,
+  },
+  email: {
+    width: width * 0.83,
+    height: height * 0.08,
+    borderBottomWidth: 2,
+    borderColor: 'grey',
+    alignSelf: 'center',
+  },
+  text: {
+    marginLeft: 10,
+    marginTop: 10,
+  },
+  button: {
+    backgroundColor: '#AE1F31',
+    width: width * 0.5,
+    height: height * 0.05,
+    alignSelf: 'center',
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+  },
+  btnText: {
+    color: 'white',
+    fontFamily: 'SF-Pro-Text-Bold',
+    fontSize: 18,
+  },
+  dont: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: width * 0.58,
+  },
+});
