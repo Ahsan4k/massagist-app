@@ -32,13 +32,6 @@ const Book = props => {
 
   const filterArray = (arr: any) => {
     if (arr.length > 0) {
-      console.log(
-        'filterArr1===========>',
-        arr.filter(
-          (item: any, index: number) =>
-            arr.indexOf(moment(item.startDate).format('HH:mm')) != index,
-        ),
-      );
       return arr.filter(
         (item: any, index: number) =>
           arr.indexOf(moment(item.startDate).format('HH:mm')) != index,
@@ -67,23 +60,10 @@ const Book = props => {
   const createTimeSlots = (interval: string) => {
     let startTime = moment('09:00', 'HH:mm');
     let endTime = moment('21:30', 'HH:mm');
-    // console.log('data===========>', data);
     const filterArr = filterArray(data);
-    // console.log('filterArr2============>', JSON.stringify(filterArr, null, 2));
     let arr = [];
     while (startTime <= endTime) {
       for (let i = 0; i <= filterArr.length; i++) {
-        // console.log('length==============>', filterArr.length);
-        // console.log(
-        // 'moment============>',
-        // filterArr[i]?.startDate,
-        // filterArr[i]?.endDate,
-        // );
-        // console.log(
-        // 'value===========>',
-        // startTime >= moment(filterArr[i]?.startDate).format('HH:mm') &&
-        // startTime <= moment(filterArr[i]?.endDate).format('HH:mm'),
-        // );
         if (
           startTime >= moment(filterArr[i]?.startDate).format('HH:mm') &&
           startTime <= moment(filterArr[i]?.endDate).format('HH:mm')
@@ -103,13 +83,10 @@ const Book = props => {
 
   useEffect(() => {
     if (new Date(selectedDay.dateString).valueOf() < new Date().valueOf()) {
-      console.log('dateslesser=============>');
       setTimeSlots([]);
     } else if (
       new Date(selectedDay.dateString).valueOf() >= new Date().valueOf()
-    )
-      console.log('datesgreater===========>');
-    {
+    ) {
       setTimeSlots(createTimeSlots(interval));
     }
     selectedDate();
