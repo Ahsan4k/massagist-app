@@ -26,7 +26,10 @@ const Book = props => {
   const [data, setData] = useState([]);
   const [loading, isLoading] = useState(false);
 
-  const onDayPress = selectDay => {
+  console.log("TIMESLOTS ", timeSlots)
+
+  const onDayPress = (selectDay: any) => {
+    console.log(selectDay)
     setSelectedDay(selectDay);
   };
 
@@ -43,10 +46,12 @@ const Book = props => {
   const GetTimeSlots = async () => {
     isLoading(true);
     try {
-      const response = await post('book/getDate', {
+      const response = await post('book/getDate', { 
         date: selectedDay.dateString,
       });
+      console.log("RESPONSE => ", response?.data?.data)
       setData(response.data.data);
+      setTimeSlots(response.data.data)
     } catch (error) {
       console.log('geterror=========>', error);
     }
@@ -82,15 +87,19 @@ const Book = props => {
   };
 
   useEffect(() => {
-    if (new Date(selectedDay.dateString).valueOf() < new Date().valueOf()) {
-      setTimeSlots([]);
-    } else if (
-      new Date(selectedDay.dateString).valueOf() >= new Date().valueOf()
-    ) {
+    GetTimeSlots();
+  },[selectedDay])
+
+  // useEffect(() => {
+  //   if (new Date(selectedDay.dateString).valueOf() < new Date().valueOf()) {
+  //     setTimeSlots([]);
+  //   } else if (
+  //     new Date(selectedDay.dateString).valueOf() >= new Date().valueOf()
+  //   ) {
       setTimeSlots(createTimeSlots(interval));
-    }
-    selectedDate();
-  }, [selectedDay]);
+  //   }
+  //   selectedDate();
+  // }, [selectedDay]);
 
   const SetBookingTime = async (startTime: any, endTime: any) => {
     const startHours = startTime.slice(0, 2);
@@ -152,14 +161,15 @@ const Book = props => {
   return (
     <View style={{width: width, height: height}}>
       <Calendar
+        minDate={moment(new Date()).format('YYYY-MM-DD')}
         onDayPress={onDayPress}
         current={moment(new Date()).format('YYYY-MM-DD')}
-        theme={{
-          backgroundColor: '#ffffff',
-          calendarBackground: '#AE1F31',
-          selectedDayBackgroundColor: '#ffffff',
-          selectedDayTextColor: '#ffffff',
-        }}
+        // theme={{
+        //   backgroundColor: '#ffffff',
+        //   calendarBackground: '#AE1F31',
+        //   selectedDayBackgroundColor: '#ffffff',
+        //   selectedDayTextColor: '#ffffff',
+        // }}
       />
       <FlatList
         data={timeSlots}

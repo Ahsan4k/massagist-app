@@ -13,11 +13,11 @@ const {width, height} = Dimensions.get('window');
 const Home = props => {
   const list = [
     {
-      image: require('../assets/Rectangle6.png'),
+      image: require('../assets/body_massage.jpg'),
       text: 'Body Massage',
     },
     {
-      image: require('../assets/Rectangle5.png'),
+      image: require('../assets/foot_massage.jpg'),
       text: 'Reflexology(Foot)',
     },
   ];
