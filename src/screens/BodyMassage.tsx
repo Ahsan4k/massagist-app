@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import React from 'react';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import BackButton from '../components/BackButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
@@ -105,8 +107,11 @@ const BodyMassage = props => {
   };
 
   return (
-    <View style={styles.window}>
-      <Image source={require('../assets/Rectangle6.png')} style={styles.img} />
+    <SafeAreaView style={styles.window}>
+      <View style={{marginHorizontal: 10}}>
+      <BackButton onPress={() => props.navigation.goBack()}/>
+      </View>
+      <Image source={require('../assets/back_massage.jpg')} style={styles.img} />
       <Text style={styles.four}>2 Hands</Text>
       {twoHands.map((item, index) => (
         <View style={styles.radio} key={index}>
@@ -138,7 +143,7 @@ const BodyMassage = props => {
         style={styles.book}>
         <Text style={styles.now}>Continue</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -152,7 +157,7 @@ const styles = StyleSheet.create({
   img: {
     width: width * 0.95,
     height: height * 0.3,
-    marginTop: 50,
+    marginTop: 30,
     alignSelf: 'center',
   },
   radio: {
