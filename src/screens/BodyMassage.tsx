@@ -107,6 +107,7 @@ const BodyMassage = props => {
   return (
     <View style={styles.window}>
       <Image source={require('../assets/Rectangle6.png')} style={styles.img} />
+      <Text style={styles.four}>2 Hands</Text>
       {twoHands.map((item, index) => (
         <View style={styles.radio} key={index}>
           <TouchableOpacity
@@ -135,7 +136,7 @@ const BodyMassage = props => {
           props.navigation.navigate('Calendar', {value, selectedValue})
         }
         style={styles.book}>
-        <Text style={styles.now}>Book Now</Text>
+        <Text style={styles.now}>Continue</Text>
       </TouchableOpacity>
     </View>
   );

@@ -7,99 +7,46 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import React, {useCallback} from 'react';
 import {Calendar} from 'react-native-calendars';
 import moment from 'moment';
 import {post, get} from '../networkcalls/requests';
+import axios from 'axios';
+import { COLORS } from '../consts/colors';
 
 const {width, height} = Dimensions.get('window');
 
 const Book = props => {
   const {useState, useEffect} = React;
-  const interval = props.route.params.selectedValue.time;
   const type = props.route.params.value.type;
   const [selectedDay, setSelectedDay] = useState({});
-  const [timeSlot, setTimeSlot] = useState(null);
   const [timeSlots, setTimeSlots] = useState<any>([]);
-  // const [visible, isVisible] = useState(false);
+  const [selectedTime, setSelectedTime] = useState('');
   const [data, setData] = useState([]);
   const [loading, isLoading] = useState(false);
-
-  console.log("TIMESLOTS ", timeSlots)
 
   const onDayPress = (selectDay: any) => {
     console.log(selectDay)
     setSelectedDay(selectDay);
   };
 
-  const filterArray = (arr: any) => {
-    if (arr.length > 0) {
-      return arr.filter(
-        (item: any, index: number) =>
-          arr.indexOf(moment(item.startDate).format('HH:mm')) != index,
-      );
-    } else {
-      return [];
-    }
-  };
   const GetTimeSlots = async () => {
     isLoading(true);
     try {
-      const response = await post('book/getDate', { 
-        date: selectedDay.dateString,
-      });
-      console.log("RESPONSE => ", response?.data?.data)
-      setData(response.data.data);
-      setTimeSlots(response.data.data)
+      const response = await get(`timeslots/availableslots/?date=${selectedDay.dateString}`);
+      setData(response.data);
+      setTimeSlots(response.data)
     } catch (error) {
       console.log('geterror=========>', error);
     }
     isLoading(false);
   };
 
-  const selectedDate = useCallback(() => {
-    GetTimeSlots();
-  }, [selectedDay]);
-
-  const createTimeSlots = (interval: string) => {
-    let startTime = moment('09:00', 'HH:mm');
-    let endTime = moment('21:30', 'HH:mm');
-    const filterArr = filterArray(data);
-    let arr = [];
-    while (startTime <= endTime) {
-      for (let i = 0; i <= filterArr.length; i++) {
-        if (
-          startTime >= moment(filterArr[i]?.startDate).format('HH:mm') &&
-          startTime <= moment(filterArr[i]?.endDate).format('HH:mm')
-        ) {
-          console.log('logged2============>');
-          arr.push(null);
-          startTime.add(interval, 'minutes');
-          return;
-        }
-      }
-      arr.push(new moment(startTime).format('HH:mm'));
-      startTime.add(interval, 'minutes');
-    }
-    console.log('arr======>', arr);
-    return arr;
-  };
-
   useEffect(() => {
     GetTimeSlots();
   },[selectedDay])
-
-  // useEffect(() => {
-  //   if (new Date(selectedDay.dateString).valueOf() < new Date().valueOf()) {
-  //     setTimeSlots([]);
-  //   } else if (
-  //     new Date(selectedDay.dateString).valueOf() >= new Date().valueOf()
-  //   ) {
-      setTimeSlots(createTimeSlots(interval));
-  //   }
-  //   selectedDate();
-  // }, [selectedDay]);
 
   const SetBookingTime = async (startTime: any, endTime: any) => {
     const startHours = startTime.slice(0, 2);
@@ -126,7 +73,6 @@ const Book = props => {
     endDate.setTime(
       endDate.getTime() - endDate.getTimezoneOffset() * 60 * 1000,
     );
-    isLoading(true);
     try {
       const response = await post('book/bookDate', {
         type,
@@ -140,7 +86,6 @@ const Book = props => {
     } catch (error) {
       Alert;
     }
-    isLoading(false);
   };
 
   if (loading) {
@@ -158,43 +103,55 @@ const Book = props => {
     );
   }
 
+ const  _listEmptyComponent = () => {
+    return (
+        <View style={{marginHorizontal: 10}}>
+            <Text> No slot found for this date.</Text>
+        </View>
+    )
+}
+
   return (
-    <View style={{width: width, height: height}}>
+    <SafeAreaView style={{width: width, height: height, backgroundColor: '#fff'}}>
       <Calendar
         minDate={moment(new Date()).format('YYYY-MM-DD')}
         onDayPress={onDayPress}
         current={moment(new Date()).format('YYYY-MM-DD')}
-        // theme={{
-        //   backgroundColor: '#ffffff',
-        //   calendarBackground: '#AE1F31',
-        //   selectedDayBackgroundColor: '#ffffff',
-        //   selectedDayTextColor: '#ffffff',
-        // }}
+        theme={{
+          calendarBackground: '#fff',  
+          dayTextColor: 'blue',
+          arrowColor: "blue",
+          todayTextColor: COLORS.primary,
+        }}
       />
+      <View style ={{marginHorizontal: 10, marginTop: 20, borderBottomWidth: 1, borderBottomColor: '#eee', paddingBottom: 5}}>
+       <Text style={{color: '#000', fontWeight: 'bold', fontSize: 17}}> Available Slots </Text>
+      </View>
       <FlatList
         data={timeSlots}
+        ListEmptyComponent={_listEmptyComponent}
         renderItem={({item, index}) => {
-          if (timeSlots[index + 1]) {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  SetBookingTime(timeSlots[index], timeSlots[index + 1]);
+                  setSelectedTime(`${item?.startTime} - ${item?.endTime}`);
+                  SetBookingTime(item?.startTime, item?.endTime);
                 }}
-                style={styles.timeslot}>
-                <Text>
-                  {timeSlots[index + 1]
-                    ? item + '-' + timeSlots[index + 1]
-                    : null}
-                </Text>
+                style={[styles.timeslot, { backgroundColor: selectedTime === `${item?.startTime} - ${item?.endTime}` ? 'blue' : COLORS.primary}]}>
+                <Text style={{color: '#fff'}}> {item?.startTime} - {item?.endTime} </Text>
               </TouchableOpacity>
             );
-          } else {
-            null;
-          }
         }}
         numColumns={2}
       />
-    </View>
+            <TouchableOpacity
+        onPress={() =>
+          props.navigation.navigate('Calendar', {value, selectedValue})
+        }
+        style={styles.book}>
+        <Text style={styles.now}>Book Now</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 
@@ -206,8 +163,25 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 10,
     borderWidth: 1,
+    borderColor: 'blue',
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: COLORS.primary,
+  },
+  book: {
+    marginTop: 50,
+    alignSelf: 'center',
+    backgroundColor: 'maroon',
+    width: width * 0.9,
+    height: height * 0.06,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+  },
+  now: {
+    color: 'white',
+    fontSize: 20,
+    fontFamily: 'SF-Pro-Text-Bold',
   },
 });
