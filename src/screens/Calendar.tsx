@@ -138,8 +138,8 @@ const Book = props => {
                   setSelectedTime(`${item?.startTime} - ${item?.endTime}`);
                   SetBookingTime(item?.startTime, item?.endTime);
                 }}
-                style={[styles.timeslot, { backgroundColor: selectedTime === `${item?.startTime} - ${item?.endTime}` ? 'blue' : COLORS.primary}]}>
-                <Text style={{color: '#fff'}}> {item?.startTime} - {item?.endTime} </Text>
+                style={[styles.timeslot, { backgroundColor: selectedTime === `${item?.startTime} - ${item?.endTime}` ? 'blue' : '#fff'}]}>
+                <Text style={{color: COLORS.primary}}> {item?.startTime} - {item?.endTime} </Text>
               </TouchableOpacity>
             );
         }}
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'blue',
+    borderColor: COLORS.primary,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
