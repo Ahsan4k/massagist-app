@@ -21,6 +21,7 @@ const {width, height} = Dimensions.get('window');
 const Book = props => {
   const {useState, useEffect} = React;
   const type = props.route.params.value.type;
+  const duration = props.route.params?.selectedValue;
   const [selectedDay, setSelectedDay] = useState({});
   const [timeSlots, setTimeSlots] = useState<any>([]);
   const [selectedTime, setSelectedTime] = useState('');
@@ -35,7 +36,7 @@ const Book = props => {
   const GetTimeSlots = async () => {
     isLoading(true);
     try {
-      const response = await get(`timeslots/availableslots/?date=${selectedDay.dateString}`);
+      const response = await get(`timeslots/availableslots/?date=${selectedDay.dateString}&duration=${duration.time}`);
       setData(response.data);
       setTimeSlots(response.data)
     } catch (error) {
@@ -144,10 +145,8 @@ const Book = props => {
         }}
         numColumns={2}
       />
-            <TouchableOpacity
-        onPress={() =>
-          props.navigation.navigate('Calendar', {value, selectedValue})
-        }
+        <TouchableOpacity
+        onPress={() =>{}}
         style={styles.book}>
         <Text style={styles.now}>Book Now</Text>
       </TouchableOpacity>

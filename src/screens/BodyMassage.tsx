@@ -16,95 +16,58 @@ const {width, height} = Dimensions.get('window');
 const BodyMassage = props => {
   const {useState} = React;
   const value = props.route.params;
-  const [selectedValue, setSelectedValue] = useState({time: '', price: ''});
+  const [selectedValue, setSelectedValue] = useState({id: 0, time: '30 minutes', price: '45', hands:'2'});
 
-  const [twoHands, setTwoHands] = useState([
+  const [twoHands] = useState([
     {
       status: 'radio-btn-passive',
-      time: '30',
+      time: '30 minutes',
       price: '45',
       hands: '2',
     },
     {
       status: 'radio-btn-passive',
-      time: '60',
+      time: '60 minutes',
       price: '70',
       hands: '2',
     },
     {
       status: 'radio-btn-passive',
-      time: '90',
+      time: '90 minutes',
       price: '100',
       hands: '2',
     },
     {
       status: 'radio-btn-passive',
-      time: '120',
+      time: '120 minutes',
       price: '130',
       hands: '2',
     },
   ]);
 
-  const [fourHands, setFourHands] = useState([
+  const [fourHands] = useState([
     {
       status: 'radio-btn-passive',
-      time: '60',
+      time: '60 minutes',
       price: '130',
       hands: '4',
     },
     {
       status: 'radio-btn-passive',
-      time: '90',
+      time: '90 minutes',
       price: '200',
       hands: '4',
     },
   ]);
 
-  const twoHandsOption = (item, index) => {
-    setFourHands(
-      fourHands.map(four =>
-        Object.assign({}, four, {
-          status:
-            four.status == 'radio-btn-active'
-              ? (four.status = 'radio-btn-passive')
-              : four.status,
-        }),
-      ),
-    );
-    setTwoHands(
-      twoHands.map((two, number) => {
-        if (index == number) {
-          setSelectedValue(two);
-          return Object.assign({}, two, {status: 'radio-btn-active'});
-        } else {
-          return Object.assign({}, two, {status: 'radio-btn-passive'});
-        }
-      }),
-    );
-  };
-
-  const fourHandsOption = (item, index) => {
-    setTwoHands(
-      twoHands.map(two =>
-        Object.assign({}, two, {
-          status:
-            two.status == 'radio-btn-active'
-              ? (two.status = 'radio-btn-passive')
-              : two.status,
-        }),
-      ),
-    );
-    setFourHands(
-      fourHands.map((four, number) => {
-        if (index == number) {
-          setSelectedValue(four);
-          return Object.assign({}, four, {status: 'radio-btn-active'});
-        } else {
-          return Object.assign({}, four, {status: 'radio-btn-passive'});
-        }
-      }),
-    );
-  };
+  const selectOptionHandler = (item: any, index: any) => {
+     setSelectedValue({
+      hands: item.hand,
+      time: item.time,
+      price: item.price,
+      id: index
+     })
+  }
 
   return (
     <SafeAreaView style={styles.window}>
@@ -116,10 +79,10 @@ const BodyMassage = props => {
       {twoHands.map((item, index) => (
         <View style={styles.radio} key={index}>
           <TouchableOpacity
-            onPress={() => twoHandsOption(item, index)}
+            onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
-            <Fontisto name={item.status} color="maroon" size={20} />
-            <Text>{item.time} minutes</Text>
+            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
+            <Text>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
         </View>
@@ -128,10 +91,10 @@ const BodyMassage = props => {
       {fourHands.map((item, index) => (
         <View style={styles.radio} key={index}>
           <TouchableOpacity
-            onPress={() => fourHandsOption(item, index)}
+            onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
-            <Fontisto name={item.status} color="maroon" size={20} />
-            <Text>{item.time} minutes</Text>
+            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
+            <Text>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
         </View>
