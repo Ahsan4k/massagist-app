@@ -32,12 +32,6 @@ const Book = props => {
 
   const filterArray = (arr: any) => {
     if (arr.length > 0) {
-      console.log(
-        'filterArray========>',
-        arr.filter(
-          (item: any, index: number) => arr.indexOf(item.startTime) != index,
-        ),
-      );
       return arr.filter(
         (item: any, index: number) => arr.indexOf(item.startTime) != index,
       );
@@ -69,16 +63,10 @@ const Book = props => {
     let arr = [];
     while (startTime <= endTime) {
       for (let i = 0; i <= filterArr.length; i++) {
-        console.log(
-          'startend======>',
-          filterArr[i]?.startTime,
-          filterArr[i]?.endTime,
-        );
         if (
           startTime >= filterArr[i]?.startTime &&
           startTime <= filterArr[i]?.endTime
         ) {
-          console.log('logged2============>');
           arr.push(null);
           startTime.add(interval, 'minutes');
           return;
@@ -87,7 +75,6 @@ const Book = props => {
       arr.push(new moment(startTime).format('HH:mm'));
       startTime.add(interval, 'minutes');
     }
-    console.log('arr======>', arr);
     return arr;
   };
 
