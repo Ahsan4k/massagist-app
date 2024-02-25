@@ -134,7 +134,6 @@ const styles = StyleSheet.create({
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     width: width * 0.27,
   },
   four: {

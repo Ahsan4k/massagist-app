@@ -77,8 +77,8 @@ const Book = props => {
     try {
       const response = await post('book/bookDate', {
         type,
-        startDate,
-        endDate,
+        startTime,
+        endTime,
         date: selectedDay.dateString,
         token:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIwMjQtMDItMTRUMTc6NTI6MTEuMDcwWiIsInVzZXJuYW1lIjoiYWJkdWwgYmFzaXQiLCJpYXQiOjE3MDc5MzMxMzF9.mtYAQELcbjqAREFfFSTg4RdpFunTLaWVCeeUET9-U3o',
