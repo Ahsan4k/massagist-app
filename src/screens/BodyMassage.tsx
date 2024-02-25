@@ -8,112 +8,81 @@ import {
 } from 'react-native';
 import React from 'react';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import BackButton from '../components/BackButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
 const BodyMassage = props => {
   const {useState} = React;
   const value = props.route.params;
-  const [selectedValue, setSelectedValue] = useState({time: '', price: ''});
+  const [selectedValue, setSelectedValue] = useState({id: 0, time: '30 minutes', price: '45', hands:'2'});
 
-  const [twoHands, setTwoHands] = useState([
+  const [twoHands] = useState([
     {
       status: 'radio-btn-passive',
-      time: '30',
+      time: '30 minutes',
       price: '45',
       hands: '2',
     },
     {
       status: 'radio-btn-passive',
-      time: '60',
+      time: '60 minutes',
       price: '70',
       hands: '2',
     },
     {
       status: 'radio-btn-passive',
-      time: '90',
+      time: '90 minutes',
       price: '100',
       hands: '2',
     },
     {
       status: 'radio-btn-passive',
-      time: '120',
+      time: '120 minutes',
       price: '130',
       hands: '2',
     },
   ]);
 
-  const [fourHands, setFourHands] = useState([
+  const [fourHands] = useState([
     {
       status: 'radio-btn-passive',
-      time: '60',
+      time: '60 minutes',
       price: '130',
       hands: '4',
     },
     {
       status: 'radio-btn-passive',
-      time: '90',
+      time: '90 minutes',
       price: '200',
       hands: '4',
     },
   ]);
 
-  const twoHandsOption = (item, index) => {
-    setFourHands(
-      fourHands.map(four =>
-        Object.assign({}, four, {
-          status:
-            four.status == 'radio-btn-active'
-              ? (four.status = 'radio-btn-passive')
-              : four.status,
-        }),
-      ),
-    );
-    setTwoHands(
-      twoHands.map((two, number) => {
-        if (index == number) {
-          setSelectedValue(two);
-          return Object.assign({}, two, {status: 'radio-btn-active'});
-        } else {
-          return Object.assign({}, two, {status: 'radio-btn-passive'});
-        }
-      }),
-    );
-  };
-
-  const fourHandsOption = (item, index) => {
-    setTwoHands(
-      twoHands.map(two =>
-        Object.assign({}, two, {
-          status:
-            two.status == 'radio-btn-active'
-              ? (two.status = 'radio-btn-passive')
-              : two.status,
-        }),
-      ),
-    );
-    setFourHands(
-      fourHands.map((four, number) => {
-        if (index == number) {
-          setSelectedValue(four);
-          return Object.assign({}, four, {status: 'radio-btn-active'});
-        } else {
-          return Object.assign({}, four, {status: 'radio-btn-passive'});
-        }
-      }),
-    );
-  };
+  const selectOptionHandler = (item: any, index: any) => {
+     setSelectedValue({
+      hands: item.hand,
+      time: item.time,
+      price: item.price,
+      id: index
+     })
+  }
 
   return (
-    <View style={styles.window}>
-      <Image source={require('../assets/Rectangle6.png')} style={styles.img} />
+    <SafeAreaView style={styles.window}>
+      <View style={{marginHorizontal: 10}}>
+      <BackButton onPress={() => props.navigation.goBack()}/>
+      </View>
+      <Image source={require('../assets/back_massage.jpg')} style={styles.img} />
+      <Text style={styles.four}>2 Hands</Text>
       {twoHands.map((item, index) => (
         <View style={styles.radio} key={index}>
           <TouchableOpacity
-            onPress={() => twoHandsOption(item, index)}
+            onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
-            <Fontisto name={item.status} color="maroon" size={20} />
-            <Text style={{marginLeft: 10}}>{item.time} minutes</Text>
+            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
+            <Text>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
         </View>
@@ -122,10 +91,10 @@ const BodyMassage = props => {
       {fourHands.map((item, index) => (
         <View style={styles.radio} key={index}>
           <TouchableOpacity
-            onPress={() => fourHandsOption(item, index)}
+            onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
-            <Fontisto name={item.status} color="maroon" size={20} />
-            <Text style={{marginLeft: 10}}>{item.time} minutes</Text>
+            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
+            <Text>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
         </View>
@@ -135,9 +104,9 @@ const BodyMassage = props => {
           props.navigation.navigate('Calendar', {value, selectedValue})
         }
         style={styles.book}>
-        <Text style={styles.now}>Book Now</Text>
+        <Text style={styles.now}>Continue</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -151,7 +120,7 @@ const styles = StyleSheet.create({
   img: {
     width: width * 0.95,
     height: height * 0.3,
-    marginTop: 50,
+    marginTop: 30,
     alignSelf: 'center',
   },
   radio: {
