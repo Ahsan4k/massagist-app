@@ -92,9 +92,9 @@ const Reflexology = props => {
         <View style={styles.radio} key={index}>
           <TouchableOpacity
             onPress={() => twoHandsOption(item, index)}
-            style={styles.btn}>
+            style={styles.btn2}>
             <Fontisto name={item.status} color="maroon" size={20} />
-            <Text>{item.time} minutes</Text>
+            <Text style={{marginLeft: 10}}>{item.time} minutes</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
         </View>
