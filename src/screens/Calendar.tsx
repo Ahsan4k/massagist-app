@@ -33,8 +33,7 @@ const Book = props => {
   const filterArray = (arr: any) => {
     if (arr.length > 0) {
       return arr.filter(
-        (item: any, index: number) =>
-          arr.indexOf(moment(item.startDate).format('HH:mm')) != index,
+        (item: any, index: number) => arr.indexOf(item.startTime) != index,
       );
     } else {
       return [];
@@ -65,10 +64,9 @@ const Book = props => {
     while (startTime <= endTime) {
       for (let i = 0; i <= filterArr.length; i++) {
         if (
-          startTime >= moment(filterArr[i]?.startDate).format('HH:mm') &&
-          startTime <= moment(filterArr[i]?.endDate).format('HH:mm')
+          startTime >= filterArr[i]?.startTime &&
+          startTime <= filterArr[i]?.endTime
         ) {
-          console.log('logged2============>');
           arr.push(null);
           startTime.add(interval, 'minutes');
           return;
@@ -77,52 +75,22 @@ const Book = props => {
       arr.push(new moment(startTime).format('HH:mm'));
       startTime.add(interval, 'minutes');
     }
-    console.log('arr======>', arr);
     return arr;
   };
 
   useEffect(() => {
-    if (new Date(selectedDay.dateString).valueOf() < new Date().valueOf()) {
-      setTimeSlots([]);
-    } else if (
-      new Date(selectedDay.dateString).valueOf() >= new Date().valueOf()
-    ) {
-      setTimeSlots(createTimeSlots(interval));
-    }
+    setTimeSlots(createTimeSlots(interval));
     selectedDate();
   }, [selectedDay]);
 
   const SetBookingTime = async (startTime: any, endTime: any) => {
-    const startHours = startTime.slice(0, 2);
-    const startMinutes = startTime.slice(3);
-    const startDate = new Date(
-      selectedDay.year,
-      selectedDay.month,
-      selectedDay.day,
-      startHours,
-      startMinutes,
-    );
-    startDate.setTime(
-      startDate.getTime() - startDate.getTimezoneOffset() * 60 * 1000,
-    );
-    const endHours = endTime.slice(0, 2);
-    const endMinutes = endTime.slice(3);
-    const endDate = new Date(
-      selectedDay.year,
-      selectedDay.month,
-      selectedDay.day,
-      endHours,
-      endMinutes,
-    );
-    endDate.setTime(
-      endDate.getTime() - endDate.getTimezoneOffset() * 60 * 1000,
-    );
+    console.log('payload======>', startTime, endTime);
     isLoading(true);
     try {
       const response = await post('book/bookDate', {
         type,
-        startDate,
-        endDate,
+        startTime,
+        endTime,
         date: selectedDay.dateString,
         token:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIwMjQtMDItMTRUMTc6NTI6MTEuMDcwWiIsInVzZXJuYW1lIjoiYWJkdWwgYmFzaXQiLCJpYXQiOjE3MDc5MzMxMzF9.mtYAQELcbjqAREFfFSTg4RdpFunTLaWVCeeUET9-U3o',
@@ -152,14 +120,15 @@ const Book = props => {
   return (
     <View style={{width: width, height: height}}>
       <Calendar
+        minDate={moment(new Date()).format('YYYY-MM-DD')}
         onDayPress={onDayPress}
         current={moment(new Date()).format('YYYY-MM-DD')}
-        theme={{
-          backgroundColor: '#ffffff',
-          calendarBackground: '#AE1F31',
-          selectedDayBackgroundColor: '#ffffff',
-          selectedDayTextColor: '#ffffff',
-        }}
+        // theme={{
+        //   backgroundColor: '#ffffff',
+        //   calendarBackground: '#AE1F31',
+        //   selectedDayBackgroundColor: '#ffffff',
+        //   selectedDayTextColor: '#AE1F31',
+        // }}
       />
       <FlatList
         data={timeSlots}

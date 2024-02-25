@@ -113,7 +113,7 @@ const BodyMassage = props => {
             onPress={() => twoHandsOption(item, index)}
             style={styles.btn}>
             <Fontisto name={item.status} color="maroon" size={20} />
-            <Text>{item.time} minutes</Text>
+            <Text style={{marginLeft: 10}}>{item.time} minutes</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
         </View>
@@ -125,7 +125,7 @@ const BodyMassage = props => {
             onPress={() => fourHandsOption(item, index)}
             style={styles.btn}>
             <Fontisto name={item.status} color="maroon" size={20} />
-            <Text>{item.time} minutes</Text>
+            <Text style={{marginLeft: 10}}>{item.time} minutes</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
         </View>
@@ -165,7 +165,6 @@ const styles = StyleSheet.create({
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     width: width * 0.27,
   },
   four: {
