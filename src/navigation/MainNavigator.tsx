@@ -16,8 +16,6 @@ import Calendar from '../screens/Calendar';
 
 const MainNavigator = () => {
   const value = useSelector(state => state.auth.value);
-  console.log('value===========>', value);
-  // const mainValue = selectValue;
   const mainValue = value;
   const Auth = createNativeStackNavigator();
   const Main = createNativeStackNavigator();
