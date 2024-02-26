@@ -37,7 +37,6 @@ const Book = props => {
   const [endTime, setEndTime] = useState('');
   const user = useSelector((state: any) => state.auth.data)
   const value = useSelector((state: any) => state.auth.value)
-  console.log("USER ", value)
 
   const onDayPress = (selectDay: any) => {
     console.log(selectDay);

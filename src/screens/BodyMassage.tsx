@@ -82,7 +82,7 @@ const BodyMassage = props => {
             onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
             <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
-            <Text>{item.time}</Text>
+            <Text style ={{marginLeft: 10}}>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
         </View>
@@ -94,7 +94,7 @@ const BodyMassage = props => {
             onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
             <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
-            <Text>{item.time}</Text>
+            <Text style ={{marginLeft: 10}}>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
         </View>
