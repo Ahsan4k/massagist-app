@@ -7,10 +7,13 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import {useDispatch} from 'react-redux';
 import {login} from '../redux/authSlice';
+import InnerLoader from '../components/InnerLoader';
+import { post } from '../networkcalls/requests';
 
 const {width, height} = Dimensions.get('window');
 
@@ -18,7 +21,28 @@ const Login = props => {
   const {useState} = React;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [innerLoading, setInnerLoading] = useState(false);
   const dispatch = useDispatch();
+
+  const loginHandler = async () => {
+    setInnerLoading(true);
+    try {
+      const response = await post('auth/login', {email: email.toLowerCase(), password: password});
+      console.log(response?.data)
+      if (response?.data?.success) {
+        setInnerLoading(false)
+        dispatch(login(response?.data))
+      }
+      else{
+        setInnerLoading(false);
+        Alert.alert("Failed", response?.data?.reason )
+      }
+    } catch (error) {
+      setInnerLoading(false);
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.view}>
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
@@ -28,22 +52,24 @@ const Login = props => {
           <Text style={styles.text}>Email</Text>
           <TextInput
             style={styles.email}
-            onChange={(email: string) => setEmail(email)}
+            onChangeText={(email: string) => setEmail(email)}
             value={email}
             placeholder="Enter Email"
           />
           <Text style={styles.text}>Password</Text>
           <TextInput
             style={styles.email}
-            onChange={(pass: string) => setPassword(pass)}
+            onChangeText={(pass: string) => setPassword(pass)}
             value={password}
             placeholder="Enter Password"
           />
         </KeyboardAvoidingView>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => dispatch(login())}>
-          <Text style={styles.btnText}>Login</Text>
+        <TouchableOpacity style={styles.button} onPress={loginHandler}>
+          {innerLoading ? (
+            <InnerLoader loading={innerLoading} />
+          ) : (
+            <Text style={styles.btnText}>Login</Text>
+          )}
         </TouchableOpacity>
       </View>
       <View style={styles.dont}>

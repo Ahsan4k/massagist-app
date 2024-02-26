@@ -9,7 +9,7 @@ import {
 import React from 'react';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import BackButton from '../components/BackButton';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
@@ -66,13 +66,13 @@ const BodyMassage = props => {
   ]);
 
   const selectOptionHandler = (item: any, index: any) => {
-    setSelectedValue({
-      hands: item.hand,
+     setSelectedValue({
+      hands: item.hands,
       time: item.time,
       price: item.price,
-      id: index,
-    });
-  };
+      id: index
+     })
+  }
 
   return (
     <SafeAreaView style={styles.window}>
@@ -89,16 +89,8 @@ const BodyMassage = props => {
           <TouchableOpacity
             onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
-            <Fontisto
-              name={
-                item.time === selectedValue.time && index === selectedValue.id
-                  ? 'radio-btn-active'
-                  : 'radio-btn-passive'
-              }
-              color="maroon"
-              size={20}
-            />
-            <Text>{item.time}</Text>
+            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
+            <Text style ={{marginLeft: 10}}>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
         </View>
@@ -109,16 +101,8 @@ const BodyMassage = props => {
           <TouchableOpacity
             onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
-            <Fontisto
-              name={
-                item.time === selectedValue.time && index === selectedValue.id
-                  ? 'radio-btn-active'
-                  : 'radio-btn-passive'
-              }
-              color="maroon"
-              size={20}
-            />
-            <Text>{item.time}</Text>
+            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
+            <Text style ={{marginLeft: 10}}>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
         </View>

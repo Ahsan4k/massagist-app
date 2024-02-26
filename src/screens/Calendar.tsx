@@ -15,6 +15,8 @@ import moment from 'moment';
 import {post, get} from '../networkcalls/requests';
 import axios from 'axios';
 import {COLORS} from '../consts/colors';
+import InnerLoader from '../components/InnerLoader';
+import {useSelector} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 
@@ -22,25 +24,52 @@ const Book = props => {
   const {useState, useEffect} = React;
   const type = props.route.params.value.type;
   const duration = props.route.params?.selectedValue;
-  const [selectedDay, setSelectedDay] = useState({});
+  console.log(duration);
+  const [selectedDay, setSelectedDay] = useState({
+    dateString: moment(new Date()).format('YYYY-MM-DD'),
+  });
   const [timeSlots, setTimeSlots] = useState<any>([]);
   const [selectedTime, setSelectedTime] = useState('');
-  const [data, setData] = useState([]);
+  const [bookings, setBookings] = useState([]);
   const [loading, isLoading] = useState(false);
+  const [innerLoading, setInnerLoading] = useState(false);
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const user = useSelector((state: any) => state.auth.data);
+
+  console.log(timeSlots);
+
+  const createTimeSlots = (fromTime: any, toTime: any, duration: string) => {
+    let startTime = moment(fromTime, 'hh:mm A');
+    let endTime = moment(toTime, 'hh:mm A');
+    if (endTime.isBefore(startTime)) {
+      endTime.add(1, 'day');
+    }
+    let arr = [];
+    while (startTime <= endTime) {
+      arr.push(new moment(startTime).format('hh:mm A'));
+      startTime.add(duration.slice(0, 3), 'minutes');
+    }
+    setTimeSlots(arr);
+  };
+
+  useEffect(() => {
+    createTimeSlots('09:00 AM', '09:00 PM', duration?.time);
+  }, []);
 
   const onDayPress = (selectDay: any) => {
     console.log(selectDay);
     setSelectedDay(selectDay);
   };
 
-  const GetTimeSlots = async () => {
+  const getBookings = async () => {
     isLoading(true);
     try {
-      const response = await get(
-        `timeslots/availableslots/?date=${selectedDay.dateString}&duration=${duration.time}`,
-      );
-      setData(response.data);
-      setTimeSlots(response.data);
+      const response = await post(`book/getDate`, {
+        date: selectedDay?.dateString,
+      });
+      setBookings(response.data.data);
+      console.log('resp=========>', response.data.data);
     } catch (error) {
       console.log('geterror=========>', error);
     }
@@ -48,59 +77,39 @@ const Book = props => {
   };
 
   useEffect(() => {
-    GetTimeSlots();
+    getBookings();
   }, [selectedDay]);
 
-  const SetBookingTime = async (startTime: any, endTime: any) => {
-    const startHours = startTime.slice(0, 2);
-    const startMinutes = startTime.slice(3);
-    const startDate = new Date(
-      selectedDay.year,
-      selectedDay.month,
-      selectedDay.day,
-      startHours,
-      startMinutes,
-    );
-    startDate.setTime(
-      startDate.getTime() - startDate.getTimezoneOffset() * 60 * 1000,
-    );
-    const endHours = endTime.slice(0, 2);
-    const endMinutes = endTime.slice(3);
-    const endDate = new Date(
-      selectedDay.year,
-      selectedDay.month,
-      selectedDay.day,
-      endHours,
-      endMinutes,
-    );
-    endDate.setTime(
-      endDate.getTime() - endDate.getTimezoneOffset() * 60 * 1000,
-    );
+  const bookAppointmentHandler = async () => {
+    setInnerLoading(true);
     try {
       const response = await post('book/bookDate', {
         type,
         startTime,
         endTime,
         date: selectedDay.dateString,
-        token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIwMjQtMDItMTRUMTc6NTI6MTEuMDcwWiIsInVzZXJuYW1lIjoiYWJkdWwgYmFzaXQiLCJpYXQiOjE3MDc5MzMxMzF9.mtYAQELcbjqAREFfFSTg4RdpFunTLaWVCeeUET9-U3o',
+        duration: duration,
+        count: 1,
+        token: user?.data?.token,
       });
-      console.log(response.data);
+      if (response?.data?.status === 'Success') {
+        setInnerLoading(false);
+        Alert.alert('Success', 'Your appointment has been booked!', [
+          {onPress: () => getBookings()},
+        ]);
+      } else if (response?.data?.status === 'Failed') {
+        setInnerLoading(false)
+        Alert.alert('Failed', "You or someone has already booked this slot for today", [{onPress: () => {}}]);
+      }
     } catch (error) {
-      Alert;
+      setInnerLoading(false);
+      console.log(error);
     }
   };
 
   if (loading) {
     return (
-      <View
-        style={{
-          width: width,
-          height: height,
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'absolute',
-        }}>
+      <View style={styles.loader}>
         <ActivityIndicator color="blue" size="large" />
       </View>
     );
@@ -112,6 +121,21 @@ const Book = props => {
         <Text> No slot found for this date.</Text>
       </View>
     );
+  };
+
+  const bookedColorHandler = (startTime: string, endTime: string) => {
+    if (
+      bookings.some(
+        (items: any) =>
+          items.startTime === startTime &&
+          items.endTime === endTime &&
+          items.count === (duration?.hands === '4' && items.count !== 2 ? 1 : 2)
+      )
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -142,35 +166,58 @@ const Book = props => {
         </Text>
       </View>
       <FlatList
-        data={timeSlots}
+        data={timeSlots.slice(0, timeSlots.length - 1)}
         ListEmptyComponent={_listEmptyComponent}
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
+              disabled={
+                bookedColorHandler(item, timeSlots[index + 1]) ? true : false
+              }
               onPress={() => {
-                setSelectedTime(`${item?.startTime} - ${item?.endTime}`);
-                SetBookingTime(item?.startTime, item?.endTime);
+                setStartTime(item);
+                setEndTime(timeSlots[index + 1]);
+                setSelectedTime(`${item} - ${timeSlots[index + 1]}`);
               }}
               style={[
                 styles.timeslot,
                 {
-                  backgroundColor:
-                    selectedTime === `${item?.startTime} - ${item?.endTime}`
-                      ? 'blue'
-                      : '#fff',
+                  backgroundColor: bookedColorHandler(
+                    item,
+                    timeSlots[index + 1],
+                  )
+                    ? '#ccc'
+                    : selectedTime === `${item} - ${timeSlots[index + 1]}`
+                    ? COLORS.primary
+                    : '#fff',
+                  borderColor: bookedColorHandler(item, timeSlots[index + 1])
+                    ? '#ccc'
+                    : COLORS.primary,
                 },
               ]}>
-              <Text style={{color: COLORS.primary}}>
+              <Text
+                style={{
+                  color:
+                    selectedTime === `${item} - ${timeSlots[index + 1]}` ||
+                    bookedColorHandler(item, timeSlots[index + 1])
+                      ? '#fff'
+                      : COLORS.primary,
+                }}>
                 {' '}
-                {item?.startTime} - {item?.endTime}{' '}
+                {item}
+                {timeSlots[index + 1] ? ' - ' + timeSlots[index + 1] : ''}
               </Text>
             </TouchableOpacity>
           );
         }}
         numColumns={2}
       />
-      <TouchableOpacity onPress={() => {}} style={styles.book}>
-        <Text style={styles.now}>Book Now</Text>
+      <TouchableOpacity onPress={bookAppointmentHandler} style={styles.book}>
+        {innerLoading ? (
+          <InnerLoader loading={innerLoading} />
+        ) : (
+          <Text style={styles.now}>Book Now</Text>
+        )}
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -204,5 +251,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontFamily: 'SF-Pro-Text-Bold',
+  },
+  loader: {
+    width: width,
+    height: height,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    backgroundColor: '#fff',
   },
 });
