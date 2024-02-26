@@ -13,6 +13,7 @@ import BodyMassage from '../screens/BodyMassage';
 import Reflexology from '../screens/Reflexology';
 import Calendar from '../screens/Calendar';
 import ForgotPassword from '../screens/ForgotPassword';
+import ChangePassword from '../screens/ChangePassword';
 
 const MainNavigator = () => {
   const value = useSelector(state => state.auth.value);
@@ -37,6 +38,11 @@ const MainNavigator = () => {
         <Auth.Screen
           name="ForgotPassword"
           component={ForgotPassword}
+          options={{headerShown: false}}
+        />
+        <Auth.Screen
+          name="ChangePassword"
+          component={ChangePassword}
           options={{headerShown: false}}
         />
       </Auth.Navigator>
