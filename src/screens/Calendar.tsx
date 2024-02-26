@@ -14,7 +14,7 @@ import {Calendar} from 'react-native-calendars';
 import moment from 'moment';
 import {post, get} from '../networkcalls/requests';
 import axios from 'axios';
-import { COLORS } from '../consts/colors';
+import {COLORS} from '../consts/colors';
 
 const {width, height} = Dimensions.get('window');
 
@@ -29,16 +29,18 @@ const Book = props => {
   const [loading, isLoading] = useState(false);
 
   const onDayPress = (selectDay: any) => {
-    console.log(selectDay)
+    console.log(selectDay);
     setSelectedDay(selectDay);
   };
 
   const GetTimeSlots = async () => {
     isLoading(true);
     try {
-      const response = await get(`timeslots/availableslots/?date=${selectedDay.dateString}&duration=${duration.time}`);
+      const response = await get(
+        `timeslots/availableslots/?date=${selectedDay.dateString}&duration=${duration.time}`,
+      );
       setData(response.data);
-      setTimeSlots(response.data)
+      setTimeSlots(response.data);
     } catch (error) {
       console.log('geterror=========>', error);
     }
@@ -47,7 +49,7 @@ const Book = props => {
 
   useEffect(() => {
     GetTimeSlots();
-  },[selectedDay])
+  }, [selectedDay]);
 
   const SetBookingTime = async (startTime: any, endTime: any) => {
     const startHours = startTime.slice(0, 2);
@@ -104,50 +106,70 @@ const Book = props => {
     );
   }
 
- const  _listEmptyComponent = () => {
+  const _listEmptyComponent = () => {
     return (
-        <View style={{marginHorizontal: 10}}>
-            <Text> No slot found for this date.</Text>
-        </View>
-    )
-}
+      <View style={{marginHorizontal: 10}}>
+        <Text> No slot found for this date.</Text>
+      </View>
+    );
+  };
 
   return (
-    <SafeAreaView style={{width: width, height: height, backgroundColor: '#fff'}}>
+    <SafeAreaView
+      style={{width: width, height: height, backgroundColor: '#fff'}}>
       <Calendar
         minDate={moment(new Date()).format('YYYY-MM-DD')}
         onDayPress={onDayPress}
         current={moment(new Date()).format('YYYY-MM-DD')}
         theme={{
-          calendarBackground: '#fff',  
+          calendarBackground: '#fff',
           dayTextColor: 'blue',
-          arrowColor: "blue",
+          arrowColor: 'blue',
           todayTextColor: COLORS.primary,
         }}
       />
-      <View style ={{marginHorizontal: 10, marginTop: 20, borderBottomWidth: 1, borderBottomColor: '#eee', paddingBottom: 5}}>
-       <Text style={{color: '#000', fontWeight: 'bold', fontSize: 17}}> Available Slots </Text>
+      <View
+        style={{
+          marginHorizontal: 10,
+          marginTop: 20,
+          borderBottomWidth: 1,
+          borderBottomColor: '#eee',
+          paddingBottom: 5,
+        }}>
+        <Text style={{color: '#000', fontWeight: 'bold', fontSize: 17}}>
+          {' '}
+          Available Slots{' '}
+        </Text>
       </View>
       <FlatList
         data={timeSlots}
         ListEmptyComponent={_listEmptyComponent}
         renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedTime(`${item?.startTime} - ${item?.endTime}`);
-                  SetBookingTime(item?.startTime, item?.endTime);
-                }}
-                style={[styles.timeslot, { backgroundColor: selectedTime === `${item?.startTime} - ${item?.endTime}` ? 'blue' : '#fff'}]}>
-                <Text style={{color: COLORS.primary}}> {item?.startTime} - {item?.endTime} </Text>
-              </TouchableOpacity>
-            );
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedTime(`${item?.startTime} - ${item?.endTime}`);
+                SetBookingTime(item?.startTime, item?.endTime);
+              }}
+              style={[
+                styles.timeslot,
+                {
+                  backgroundColor:
+                    selectedTime === `${item?.startTime} - ${item?.endTime}`
+                      ? 'blue'
+                      : '#fff',
+                },
+              ]}>
+              <Text style={{color: COLORS.primary}}>
+                {' '}
+                {item?.startTime} - {item?.endTime}{' '}
+              </Text>
+            </TouchableOpacity>
+          );
         }}
         numColumns={2}
       />
-        <TouchableOpacity
-        onPress={() =>{}}
-        style={styles.book}>
+      <TouchableOpacity onPress={() => {}} style={styles.book}>
         <Text style={styles.now}>Book Now</Text>
       </TouchableOpacity>
     </SafeAreaView>

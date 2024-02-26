@@ -9,14 +9,19 @@ import {
 import React from 'react';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import BackButton from '../components/BackButton';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
 const BodyMassage = props => {
   const {useState} = React;
   const value = props.route.params;
-  const [selectedValue, setSelectedValue] = useState({id: 0, time: '30 minutes', price: '45', hands:'2'});
+  const [selectedValue, setSelectedValue] = useState({
+    id: 0,
+    time: '30 minutes',
+    price: '45',
+    hands: '2',
+  });
 
   const [twoHands] = useState([
     {
@@ -61,27 +66,38 @@ const BodyMassage = props => {
   ]);
 
   const selectOptionHandler = (item: any, index: any) => {
-     setSelectedValue({
+    setSelectedValue({
       hands: item.hand,
       time: item.time,
       price: item.price,
-      id: index
-     })
-  }
+      id: index,
+    });
+  };
 
   return (
     <SafeAreaView style={styles.window}>
       <View style={{marginHorizontal: 10}}>
-      <BackButton onPress={() => props.navigation.goBack()}/>
+        <BackButton onPress={() => props.navigation.goBack()} />
       </View>
-      <Image source={require('../assets/back_massage.jpg')} style={styles.img} />
+      <Image
+        source={require('../assets/back_massage.jpg')}
+        style={styles.img}
+      />
       <Text style={styles.four}>2 Hands</Text>
       {twoHands.map((item, index) => (
         <View style={styles.radio} key={index}>
           <TouchableOpacity
             onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
-            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
+            <Fontisto
+              name={
+                item.time === selectedValue.time && index === selectedValue.id
+                  ? 'radio-btn-active'
+                  : 'radio-btn-passive'
+              }
+              color="maroon"
+              size={20}
+            />
             <Text>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
@@ -93,7 +109,15 @@ const BodyMassage = props => {
           <TouchableOpacity
             onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
-            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
+            <Fontisto
+              name={
+                item.time === selectedValue.time && index === selectedValue.id
+                  ? 'radio-btn-active'
+                  : 'radio-btn-passive'
+              }
+              color="maroon"
+              size={20}
+            />
             <Text>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
