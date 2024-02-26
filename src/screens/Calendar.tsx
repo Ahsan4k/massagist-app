@@ -171,9 +171,9 @@ const Book = props => {
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
-              // disabled={
-              //   bookedColorHandler(item, timeSlots[index + 1]) ? true : false
-              // }
+              disabled={
+                bookedColorHandler(item, timeSlots[index + 1]) ? true : false
+              }
               onPress={() => {
                 setStartTime(item);
                 setEndTime(timeSlots[index + 1]);
