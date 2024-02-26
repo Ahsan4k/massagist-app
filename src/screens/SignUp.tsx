@@ -16,6 +16,8 @@ const {width, height} = Dimensions.get('window');
 const SignUp = props => {
   const {useState} = React;
   const [email, setEmail] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -25,6 +27,20 @@ const SignUp = props => {
       <Text style={styles.head}>SignUp</Text>
       <View style={styles.inner}>
         <KeyboardAvoidingView behavior="padding">
+          <Text style={styles.text}>First Name</Text>
+          <TextInput
+            style={styles.email}
+            onChange={(email: string) => setFirstName(email)}
+            value={firstName}
+            placeholder="Enter First Name"
+          />
+          <Text style={styles.text}>Last Name</Text>
+          <TextInput
+            style={styles.email}
+            onChange={(email: string) => setLastName(email)}
+            value={lastName}
+            placeholder="Enter Last Name"
+          />
           <Text style={styles.text}>Email</Text>
           <TextInput
             style={styles.email}
@@ -55,7 +71,7 @@ const SignUp = props => {
             style={styles.email}
             onChange={(pass: string) => setConfirmPassword(pass)}
             value={confirmPassword}
-            placeholder="Retype Password"
+            placeholder="Re-enter Password"
           />
         </KeyboardAvoidingView>
         <Pressable style={styles.button} onClick={() => {}}>
@@ -93,7 +109,7 @@ const styles = StyleSheet.create({
   inner: {
     backgroundColor: 'white',
     width: width * 0.9,
-    height: height * 0.48,
+    height: height * 0.6,
     borderRadius: 10,
     marginTop: 20,
     // alignItems: 'center',
@@ -111,7 +127,7 @@ const styles = StyleSheet.create({
   },
   email: {
     width: width * 0.83,
-    height: height * 0.05,
+    height: height * 0.045,
     borderBottomWidth: 2,
     borderColor: 'grey',
     alignSelf: 'center',

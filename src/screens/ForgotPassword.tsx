@@ -2,23 +2,19 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
-  Image,
   TextInput,
-  TouchableOpacity,
+  Image,
   KeyboardAvoidingView,
+  Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import React from 'react';
-import {useDispatch} from 'react-redux';
-import {login} from '../redux/authSlice';
 
 const {width, height} = Dimensions.get('window');
 
-const Login = props => {
+const ForgotPassword = () => {
   const {useState} = React;
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const dispatch = useDispatch();
   return (
     <View style={styles.view}>
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
@@ -32,48 +28,16 @@ const Login = props => {
             value={email}
             placeholder="Enter Email"
           />
-          <Text style={styles.text}>Password</Text>
-          <TextInput
-            style={styles.email}
-            onChange={(pass: string) => setPassword(pass)}
-            value={password}
-            placeholder="Enter Password"
-          />
         </KeyboardAvoidingView>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => dispatch(login())}>
-          <Text style={styles.btnText}>Login</Text>
+        <TouchableOpacity style={styles.button} onPress={() => {}}>
+          <Text style={styles.btnText}>Request OTP</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.dont}>
-        <Text style={{color: 'white', fontFamily: 'SF-Pro-Text-Light'}}>
-          Don't have an account?
-        </Text>
-        <Text
-          style={{
-            color: 'white',
-            fontFamily: 'SF-Pro-Text-Light',
-            textDecorationLine: 'underline',
-          }}
-          onPress={() => props.navigation.navigate('SignUp')}>
-          SignUp
-        </Text>
-      </View>
-      <Text
-        style={{
-          marginTop: 20,
-          color: 'white',
-          fontFamily: 'SF-Pro-Text-Light',
-        }}
-        onPress={() => props.navigation.navigate('ForgotPassword')}>
-        Forgot Password?
-      </Text>
     </View>
   );
 };
 
-export default Login;
+export default ForgotPassword;
 
 const styles = StyleSheet.create({
   view: {
@@ -86,7 +50,7 @@ const styles = StyleSheet.create({
   inner: {
     backgroundColor: 'white',
     width: width * 0.9,
-    height: height * 0.37,
+    height: height * 0.25,
     borderRadius: 10,
     marginTop: 20,
     // alignItems: 'center',
@@ -127,11 +91,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'SF-Pro-Text-Bold',
     fontSize: 18,
-  },
-  dont: {
-    marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: width * 0.58,
   },
 });
