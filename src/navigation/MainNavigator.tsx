@@ -12,7 +12,7 @@ import SignUp from '../screens/SignUp';
 import BodyMassage from '../screens/BodyMassage';
 import Reflexology from '../screens/Reflexology';
 import Calendar from '../screens/Calendar';
-// import {selectValue} from '../redux/authSlice';
+import ForgotPassword from '../screens/ForgotPassword';
 
 const MainNavigator = () => {
   const value = useSelector(state => state.auth.value);
@@ -33,6 +33,11 @@ const MainNavigator = () => {
         <Auth.Screen
           name="SignUp"
           component={SignUp}
+          options={{headerShown: false}}
+        />
+        <Auth.Screen
+          name="ForgotPassword"
+          component={ForgotPassword}
           options={{headerShown: false}}
         />
       </Auth.Navigator>

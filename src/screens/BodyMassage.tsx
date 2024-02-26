@@ -16,7 +16,12 @@ const {width, height} = Dimensions.get('window');
 const BodyMassage = props => {
   const {useState} = React;
   const value = props.route.params;
-  const [selectedValue, setSelectedValue] = useState({id: 0, time: '30 minutes', price: '45', hands:'2'});
+  const [selectedValue, setSelectedValue] = useState({
+    id: 0,
+    time: '30 minutes',
+    price: '45',
+    hands: '2',
+  });
 
   const [twoHands] = useState([
     {
@@ -72,9 +77,12 @@ const BodyMassage = props => {
   return (
     <SafeAreaView style={styles.window}>
       <View style={{marginHorizontal: 10}}>
-      <BackButton onPress={() => props.navigation.goBack()}/>
+        <BackButton onPress={() => props.navigation.goBack()} />
       </View>
-      <Image source={require('../assets/back_massage.jpg')} style={styles.img} />
+      <Image
+        source={require('../assets/back_massage.jpg')}
+        style={styles.img}
+      />
       <Text style={styles.four}>2 Hands</Text>
       {twoHands.map((item, index) => (
         <View style={styles.radio} key={index}>

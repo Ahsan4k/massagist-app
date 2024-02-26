@@ -86,6 +86,15 @@ const Login = props => {
           SignUp
         </Text>
       </View>
+      <Text
+        style={{
+          marginTop: 20,
+          color: 'white',
+          fontFamily: 'SF-Pro-Text-Light',
+        }}
+        onPress={() => props.navigation.navigate('ForgotPassword')}>
+        Forgot Password?
+      </Text>
     </View>
   );
 };
