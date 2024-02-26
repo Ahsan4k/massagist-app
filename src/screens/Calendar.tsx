@@ -16,6 +16,7 @@ import {post, get} from '../networkcalls/requests';
 import axios from 'axios';
 import {COLORS} from '../consts/colors';
 import InnerLoader from '../components/InnerLoader';
+import { useSelector } from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 
@@ -34,6 +35,9 @@ const Book = props => {
   const [innerLoading, setInnerLoading] = useState(false);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+  const user = useSelector((state: any) => state.auth.data)
+  const value = useSelector((state: any) => state.auth.value)
+  console.log("USER ", value)
 
   const onDayPress = (selectDay: any) => {
     console.log(selectDay);
@@ -68,8 +72,7 @@ const Book = props => {
         date: selectedDay.dateString,
         duration: duration,
         count: 1,
-        token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIwMjQtMDItMTRUMTc6NTI6MTEuMDcwWiIsInVzZXJuYW1lIjoiYWJkdWwgYmFzaXQiLCJpYXQiOjE3MDc5MzMxMzF9.mtYAQELcbjqAREFfFSTg4RdpFunTLaWVCeeUET9-U3o',
+        token: user?.data?.token
       });
       if (response?.data?.status === 'Success') {
         setInnerLoading(false);
