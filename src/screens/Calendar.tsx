@@ -16,7 +16,7 @@ import {post, get} from '../networkcalls/requests';
 import axios from 'axios';
 import {COLORS} from '../consts/colors';
 import InnerLoader from '../components/InnerLoader';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 
@@ -30,27 +30,46 @@ const Book = props => {
   });
   const [timeSlots, setTimeSlots] = useState<any>([]);
   const [selectedTime, setSelectedTime] = useState('');
-  const [data, setData] = useState([]);
+  const [bookings, setBookings] = useState([]);
   const [loading, isLoading] = useState(false);
   const [innerLoading, setInnerLoading] = useState(false);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const user = useSelector((state: any) => state.auth.data)
-  const value = useSelector((state: any) => state.auth.value)
+  const user = useSelector((state: any) => state.auth.data);
+
+  console.log(timeSlots);
+
+  const createTimeSlots = (fromTime: any, toTime: any, duration: string) => {
+    let startTime = moment(fromTime, 'hh:mm A');
+    let endTime = moment(toTime, 'hh:mm A');
+    if (endTime.isBefore(startTime)) {
+      endTime.add(1, 'day');
+    }
+    let arr = [];
+    while (startTime <= endTime) {
+      arr.push(new moment(startTime).format('hh:mm A'));
+      startTime.add(duration.slice(0, 3), 'minutes');
+    }
+    setTimeSlots(arr);
+  };
+
+  useEffect(() => {
+    createTimeSlots('09:00 AM', '09:00 PM', duration?.time);
+  }, []);
 
   const onDayPress = (selectDay: any) => {
     console.log(selectDay);
     setSelectedDay(selectDay);
   };
 
-  const GetTimeSlots = async () => {
+  const getBookings = async () => {
     isLoading(true);
     try {
-      const response = await get(
-        `timeslots/availableslots/?date=${selectedDay.dateString}&duration=${duration.time}`,
-      );
-      setData(response.data);
-      setTimeSlots(response.data);
+      const response = await post(`book/getDate`, {
+        date: selectedDay?.dateString,
+      });
+      setBookings(response.data.data);
+      console.log('resp=========>', response.data.data);
     } catch (error) {
       console.log('geterror=========>', error);
     }
@@ -58,7 +77,7 @@ const Book = props => {
   };
 
   useEffect(() => {
-    GetTimeSlots();
+    getBookings();
   }, [selectedDay]);
 
   const bookAppointmentHandler = async () => {
@@ -71,13 +90,16 @@ const Book = props => {
         date: selectedDay.dateString,
         duration: duration,
         count: 1,
-        token: user?.data?.token
+        token: user?.data?.token,
       });
       if (response?.data?.status === 'Success') {
         setInnerLoading(false);
         Alert.alert('Success', 'Your appointment has been booked!', [
-          {onPress: () => GetTimeSlots()},
+          {onPress: () => getBookings()},
         ]);
+      } else if (response?.data?.status === 'Failed') {
+        setInnerLoading(false)
+        Alert.alert('Failed', "You or someone has already booked this slot for today", [{onPress: () => {}}]);
       }
     } catch (error) {
       setInnerLoading(false);
@@ -99,6 +121,21 @@ const Book = props => {
         <Text> No slot found for this date.</Text>
       </View>
     );
+  };
+
+  const bookedColorHandler = (startTime: string, endTime: string) => {
+    if (
+      bookings.some(
+        (items: any) =>
+          items.startTime === startTime &&
+          items.endTime === endTime &&
+          items.count === 2,
+      )
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -129,34 +166,46 @@ const Book = props => {
         </Text>
       </View>
       <FlatList
-        data={timeSlots}
+        data={timeSlots.slice(0, timeSlots.length - 1)}
         ListEmptyComponent={_listEmptyComponent}
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
+              // disabled={
+              //   bookedColorHandler(item, timeSlots[index + 1]) ? true : false
+              // }
               onPress={() => {
-                setStartTime(item?.startTime);
-                setEndTime(item?.endTime);
-                setSelectedTime(`${item?.startTime} - ${item?.endTime}`);
+                setStartTime(item);
+                setEndTime(timeSlots[index + 1]);
+                setSelectedTime(`${item} - ${timeSlots[index + 1]}`);
               }}
               style={[
                 styles.timeslot,
                 {
-                  backgroundColor:
-                    selectedTime === `${item?.startTime} - ${item?.endTime}`
-                      ? COLORS.primary
-                      : '#fff',
+                  backgroundColor: bookedColorHandler(
+                    item,
+                    timeSlots[index + 1],
+                  )
+                    ? '#ccc'
+                    : selectedTime === `${item} - ${timeSlots[index + 1]}`
+                    ? COLORS.primary
+                    : '#fff',
+                  borderColor: bookedColorHandler(item, timeSlots[index + 1])
+                    ? '#ccc'
+                    : COLORS.primary,
                 },
               ]}>
               <Text
                 style={{
                   color:
-                    selectedTime === `${item?.startTime} - ${item?.endTime}`
+                    selectedTime === `${item} - ${timeSlots[index + 1]}` ||
+                    bookedColorHandler(item, timeSlots[index + 1])
                       ? '#fff'
                       : COLORS.primary,
                 }}>
                 {' '}
-                {item?.startTime} - {item?.endTime}{' '}
+                {item}
+                {timeSlots[index + 1] ? ' - ' + timeSlots[index + 1] : ''}
               </Text>
             </TouchableOpacity>
           );
