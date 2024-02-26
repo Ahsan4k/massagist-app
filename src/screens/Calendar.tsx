@@ -129,7 +129,7 @@ const Book = props => {
         (items: any) =>
           items.startTime === startTime &&
           items.endTime === endTime &&
-          items.count === 2,
+          items.count === (duration?.hands === '4' && items.count !== 2 ? 1 : 2)
       )
     ) {
       return true;
