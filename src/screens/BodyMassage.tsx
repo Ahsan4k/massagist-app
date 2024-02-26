@@ -62,7 +62,7 @@ const BodyMassage = props => {
 
   const selectOptionHandler = (item: any, index: any) => {
      setSelectedValue({
-      hands: item.hand,
+      hands: item.hands,
       time: item.time,
       price: item.price,
       id: index
