@@ -18,6 +18,7 @@ import ChangePassword from '../screens/ChangePassword';
 const MainNavigator = () => {
   const value = useSelector(state => state.auth.value);
   const mainValue = value;
+  console.log("MAIN => ", mainValue)
   const Auth = createNativeStackNavigator();
   const Main = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();

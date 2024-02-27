@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
@@ -28,7 +29,7 @@ const Home = props => {
       : props.navigation.navigate('Reflex', {type: 'Reflexology'});
   };
   return (
-    <View style={styles.window}>
+    <SafeAreaView style={styles.window}>
       {list.map((item, index) => (
         <TouchableOpacity
           key={index}
@@ -38,7 +39,7 @@ const Home = props => {
           <Text style={styles.text}>{item.text}</Text>
         </TouchableOpacity>
       ))}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -49,7 +50,6 @@ const styles = StyleSheet.create({
     width: width,
     height: height,
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#AE1F31',
   },
   option: {
