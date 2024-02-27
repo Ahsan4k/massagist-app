@@ -2,44 +2,63 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
   Dimensions,
+  Image,
+  TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React from 'react';
+import {useDispatch} from 'react-redux';
+import {login} from '../redux/authSlice';
 
 const {width, height} = Dimensions.get('window');
 
-const ForgotPassword = props => {
+const ChangePassword = props => {
   const {useState} = React;
-  const [email, setEmail] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const dispatch = useDispatch();
   return (
     <View style={styles.view}>
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
       <Text style={styles.head}>Login</Text>
       <View style={styles.inner}>
         <KeyboardAvoidingView behavior="padding">
-          <Text style={styles.text}>Email</Text>
+          <Text style={styles.text}>Old Password</Text>
           <TextInput
             style={styles.email}
-            onChange={(email: string) => setEmail(email)}
-            value={email}
-            placeholder="Enter Email"
+            onChange={(pass: string) => setOldPassword(pass)}
+            value={oldPassword}
+            placeholder="Enter Old Password"
+          />
+          <Text style={styles.text}>New Password</Text>
+          <TextInput
+            style={styles.email}
+            onChange={(pass: string) => setNewPassword(pass)}
+            value={newPassword}
+            placeholder="Enter New Password"
+          />
+          <Text style={styles.text}>Re-enter New Password</Text>
+          <TextInput
+            style={styles.email}
+            onChange={(pass: string) => setConfirmPassword(pass)}
+            value={confirmPassword}
+            placeholder="Enter New Password"
           />
         </KeyboardAvoidingView>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => props.navigation.navigate('ChangePassword')}>
-          <Text style={styles.btnText}>Request OTP</Text>
+          onPress={() => dispatch(login())}>
+          <Text style={styles.btnText}>Login</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default ForgotPassword;
+export default ChangePassword;
 
 const styles = StyleSheet.create({
   view: {
@@ -52,7 +71,7 @@ const styles = StyleSheet.create({
   inner: {
     backgroundColor: 'white',
     width: width * 0.9,
-    height: height * 0.25,
+    height: height * 0.45,
     borderRadius: 10,
     marginTop: 20,
     // alignItems: 'center',
@@ -93,5 +112,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'SF-Pro-Text-Bold',
     fontSize: 18,
+  },
+  dont: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: width * 0.58,
   },
 });
