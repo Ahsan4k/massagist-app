@@ -13,7 +13,7 @@ import React from 'react';
 import {useDispatch} from 'react-redux';
 import {login} from '../redux/authSlice';
 import InnerLoader from '../components/InnerLoader';
-import { post } from '../networkcalls/requests';
+import {post} from '../networkcalls/requests';
 
 const {width, height} = Dimensions.get('window');
 
@@ -22,24 +22,45 @@ const Login = props => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [innerLoading, setInnerLoading] = useState(false);
+
   const dispatch = useDispatch();
 
+  const validator = () => {
+    if (email === '' && password === '') {
+      Alert.alert("Info", "Email and password are required.")
+      return false;
+    }
+    if (email === '') {
+      Alert.alert("Info", "Email is required.")
+      return false;
+    }
+    if (password === '') {
+      Alert.alert("Info", "Password is required.")
+      return false;
+    }
+    return true;
+  };
+
   const loginHandler = async () => {
-    setInnerLoading(true);
-    try {
-      const response = await post('auth/login', {email: email.toLowerCase(), password: password});
-      console.log(response?.data)
-      if (response?.data?.success) {
-        setInnerLoading(false)
-        dispatch(login(response?.data))
-      }
-      else{
+    if (validator()) {
+      setInnerLoading(true);
+      try {
+        const response = await post('auth/login', {
+          email: email.toLowerCase(),
+          password: password,
+        });
+        console.log(response?.data);
+        if (response?.data?.success) {
+          setInnerLoading(false);
+          dispatch(login(response?.data));
+        } else {
+          setInnerLoading(false);
+          Alert.alert('Failed', response?.data?.reason);
+        }
+      } catch (error) {
         setInnerLoading(false);
-        Alert.alert("Failed", response?.data?.reason )
+        console.log(error);
       }
-    } catch (error) {
-      setInnerLoading(false);
-      console.log(error);
     }
   };
 
