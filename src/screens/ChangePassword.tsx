@@ -23,7 +23,7 @@ const ChangePassword = props => {
   return (
     <View style={styles.view}>
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
-      <Text style={styles.head}>Login</Text>
+      <Text style={styles.head}>Password Change</Text>
       <View style={styles.inner}>
         <KeyboardAvoidingView behavior="padding">
           <Text style={styles.text}>Old Password</Text>
@@ -51,7 +51,7 @@ const ChangePassword = props => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => dispatch(login())}>
-          <Text style={styles.btnText}>Login</Text>
+          <Text style={styles.btnText}>Change</Text>
         </TouchableOpacity>
       </View>
     </View>

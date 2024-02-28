@@ -18,7 +18,7 @@ import ChangePassword from '../screens/ChangePassword';
 const MainNavigator = () => {
   const value = useSelector(state => state.auth.value);
   const mainValue = value;
-  console.log("MAIN => ", mainValue)
+  console.log('MAIN => ', mainValue);
   const Auth = createNativeStackNavigator();
   const Main = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
@@ -95,6 +95,11 @@ const MainNavigator = () => {
         <Main.Screen
           name="Calendar"
           component={Calendar}
+          options={{headerShown: false}}
+        />
+        <Auth.Screen
+          name="ChangePassword"
+          component={ChangePassword}
           options={{headerShown: false}}
         />
       </Main.Navigator>

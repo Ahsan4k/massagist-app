@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     height: height,
     alignItems: 'center',
     backgroundColor: '#AE1F31',
+    justifyContent: 'center',
   },
   option: {
     marginTop: 20,
