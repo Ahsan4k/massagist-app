@@ -39,7 +39,9 @@ const ForgotPassword = props => {
         if (response?.data?.success) {
           setInnerLoading(false);
           Alert.alert('Success', response?.data?.message, [
-            {onPress: () => props.navigation.navigate('ChangePassword')},
+            {onPress: () => props.navigation.navigate('Otp',{
+              email: email.toLowerCase()
+            })},
           ]);
         }
       } catch (error) {
@@ -52,7 +54,7 @@ const ForgotPassword = props => {
   return (
     <View style={styles.view}>
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
-      <Text style={styles.head}>Login</Text>
+      <Text style={styles.head}>OTP</Text>
       <View style={styles.inner}>
         <KeyboardAvoidingView behavior="padding">
           <Text style={styles.text}>Email</Text>
