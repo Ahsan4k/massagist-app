@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   book: {
     marginTop: 50,
     alignSelf: 'center',
-    backgroundColor: 'maroon',
+    backgroundColor: COLORS.primary,
     width: width * 0.9,
     height: height * 0.06,
     alignItems: 'center',

@@ -10,6 +10,7 @@ import React from 'react';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import BackButton from '../components/BackButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { COLORS } from '../consts/colors';
 
 const {width, height} = Dimensions.get('window');
 
@@ -89,7 +90,7 @@ const BodyMassage = props => {
           <TouchableOpacity
             onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
-            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
+            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color={COLORS.primary} size={20} />
             <Text style ={{marginLeft: 10}}>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
@@ -101,7 +102,7 @@ const BodyMassage = props => {
           <TouchableOpacity
             onPress={() => selectOptionHandler(item, index)}
             style={styles.btn}>
-            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color="maroon" size={20} />
+            <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color={COLORS.primary} size={20} />
             <Text style ={{marginLeft: 10}}>{item.time}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
   book: {
     marginTop: 50,
     alignSelf: 'center',
-    backgroundColor: 'maroon',
+    backgroundColor: COLORS.primary,
     width: width * 0.9,
     height: height * 0.06,
     alignItems: 'center',

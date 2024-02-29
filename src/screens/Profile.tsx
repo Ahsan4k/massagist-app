@@ -5,29 +5,42 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
+  Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import React from 'react';
 import Modal from 'react-native-modal';
+import {useSelector} from 'react-redux';
+import { COLORS } from '../consts/colors';
 
 const {width, height} = Dimensions.get('screen');
 
 const Profile = props => {
   const {useState} = React;
   const [visible, setVisible] = useState<boolean>(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const user = useSelector((state: any) => state.auth.data);
+  const [phoneNumber, setPhoneNumber] = useState(user.data.phoneNumber);
+  console.log(user);
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.window}>
         <View style={styles.inner}>
           <View style={styles.circle}>
-            <Text style={styles.name}>AH</Text>
+            <Text style={styles.name}>{`${user.data.firstName.slice(
+              0,
+              1,
+            )}${user.data.lastName.slice(0, 1)}`}</Text>
           </View>
-          <Text style={styles.des}>Ahsan Hussain</Text>
-          <Text style={styles.des}>ahsanhussain123@gmail.com</Text>
-          <Text style={styles.des}>090078601</Text>
+          <Text
+            style={
+              styles.des
+            }>{`${user.data.firstName} ${user.data.lastName}`}</Text>
+          <Text style={styles.des}>{user.data.email}</Text>
+          <Text style={styles.des}>{phoneNumber}</Text>
         </View>
-        <TouchableOpacity onPress={() => setVisible(true)} style={styles.tab}>
+        <TouchableOpacity
+          onPress={() => setVisible(true)}
+          style={[styles.tab, {marginTop: 30}]}>
           <Text style={styles.text}>Change Phone number</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -44,10 +57,12 @@ const Profile = props => {
       </View>
       <Modal isVisible={visible}>
         <View style={styles.modal}>
-          <Text onPress={() => setVisible(false)} style={styles.close}>
-            X
-          </Text>
+          <TouchableOpacity onPress={() => setVisible(false)} style={styles.close}>
+            <Image source={require('../assets/close.png')} style={{width: 35, height: 35}}/> 
+          </TouchableOpacity>
           <TextInput
+            placeholder='Phone Number'
+            placeholderTextColor='#ccc'
             onChange={phone => setPhoneNumber(phone)}
             value={phoneNumber}
             style={styles.input}
@@ -67,7 +82,7 @@ const styles = StyleSheet.create({
   main: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'maroon',
+    backgroundColor: COLORS.primary,
     flex: 1,
   },
   window: {
@@ -80,13 +95,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   circle: {
-    backgroundColor: 'maroon',
+    backgroundColor: COLORS.primary,
     borderRadius: 50,
     width: width * 0.2,
     height: width * 0.2,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 30,
+    marginBottom: 10,
   },
   name: {
     color: 'white',
@@ -94,7 +110,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   tab: {
-    backgroundColor: 'maroon',
+    backgroundColor: COLORS.primary,
     width: width * 0.7,
     height: height * 0.05,
     alignItems: 'center',
@@ -108,11 +124,11 @@ const styles = StyleSheet.create({
   },
   des: {
     fontSize: 18,
-    fontFamilt: 'SF-Pro-Text-Bold',
+    fontFamily: 'SF-Pro-Text-Bold',
   },
   modal: {
     width: width * 0.8,
-    height: height * 0.2,
+    height: height * 0.22,
     backgroundColor: 'white',
     alignSelf: 'center',
     alignItems: 'center',
@@ -122,13 +138,14 @@ const styles = StyleSheet.create({
     width: '80%',
     alignSelf: 'center',
     height: '25%',
-    marginTop: 20,
-    backgroundColor: 'lightgrey',
+    marginTop: 10,
+    backgroundColor: '#fff',
+    paddingLeft: 10
   },
   btn: {
     width: '70%',
     height: '25%',
-    backgroundColor: 'maroon',
+    backgroundColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
@@ -142,5 +159,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     alignSelf: 'flex-end',
     marginRight: 10,
+    marginTop: 10
   },
 });
