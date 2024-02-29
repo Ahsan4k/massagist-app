@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
   main: {
     width: width,
     height: height,
+    backgroundColor: 'white',
   },
   tab: {
     borderWidth: 1,
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
     marginRight: 10,
-    marginLeft: 5,
+    marginLeft: 10,
     backgroundColor: 'white',
   },
   margin: {
@@ -48,8 +49,9 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: width * 0.03,
     height: width * 0.03,
-    backgroundColor: 'maroon',
+    backgroundColor: 'darkpink',
     marginLeft: 5,
+    marginTop: 20,
   },
   box: {
     flexDirection: 'row',
