@@ -6,12 +6,16 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import React from 'react';
 import Modal from 'react-native-modal';
-import {useSelector} from 'react-redux';
-import { COLORS } from '../consts/colors';
+import {useDispatch, useSelector} from 'react-redux';
+import {COLORS} from '../consts/colors';
+import {del, post} from '../networkcalls/requests';
+import {logout } from '../redux/authSlice';
+import InnerLoader from '../components/InnerLoader';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -20,7 +24,27 @@ const Profile = props => {
   const [visible, setVisible] = useState<boolean>(false);
   const user = useSelector((state: any) => state.auth.data);
   const [phoneNumber, setPhoneNumber] = useState(user.data.phoneNumber);
+  const [innerLoading, setInnerLoading] = useState(false);
+  const dispatch = useDispatch();
   console.log(user);
+
+  const logoutHandler = async () => {
+    setInnerLoading(true);
+    try {
+      const response = await post('auth/logout', {token: user.data.token});
+      if (response?.data?.success) {
+        dispatch(logout([]))
+        setInnerLoading(false);
+      } else {
+        setInnerLoading(false);
+        Alert.alert('Failed', response?.data?.reason);
+      }
+    } catch (error) {
+      setInnerLoading(false);
+      console.log(error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.window}>
@@ -51,18 +75,28 @@ const Profile = props => {
         <TouchableOpacity style={styles.tab}>
           <Text style={styles.text}>Booking History</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tab}>
-          <Text style={styles.text}>Logout</Text>
+        <TouchableOpacity style={styles.tab} onPress={logoutHandler}>
+        {innerLoading ? (
+            <InnerLoader loading={innerLoading} />
+          ) : (
+            <Text style={styles.text}>Logout</Text>
+          )}
+         
         </TouchableOpacity>
       </View>
       <Modal isVisible={visible}>
         <View style={styles.modal}>
-          <TouchableOpacity onPress={() => setVisible(false)} style={styles.close}>
-            <Image source={require('../assets/close.png')} style={{width: 35, height: 35}}/> 
+          <TouchableOpacity
+            onPress={() => setVisible(false)}
+            style={styles.close}>
+            <Image
+              source={require('../assets/close.png')}
+              style={{width: 35, height: 35}}
+            />
           </TouchableOpacity>
           <TextInput
-            placeholder='Phone Number'
-            placeholderTextColor='#ccc'
+            placeholder="Phone Number"
+            placeholderTextColor="#ccc"
             onChange={phone => setPhoneNumber(phone)}
             value={phoneNumber}
             style={styles.input}
@@ -140,7 +174,7 @@ const styles = StyleSheet.create({
     height: '25%',
     marginTop: 10,
     backgroundColor: '#fff',
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   btn: {
     width: '70%',
@@ -159,6 +193,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     alignSelf: 'flex-end',
     marginRight: 10,
-    marginTop: 10
+    marginTop: 10,
   },
 });
