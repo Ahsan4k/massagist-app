@@ -14,11 +14,11 @@ import Reflexology from '../screens/Reflexology';
 import Calendar from '../screens/Calendar';
 import ForgotPassword from '../screens/ForgotPassword';
 import ChangePassword from '../screens/ChangePassword';
+import Otp from '../screens/Otp';
 
 const MainNavigator = () => {
   const value = useSelector(state => state.auth.value);
   const mainValue = value;
-  console.log('MAIN => ', mainValue);
   const Auth = createNativeStackNavigator();
   const Main = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
@@ -44,6 +44,11 @@ const MainNavigator = () => {
         <Auth.Screen
           name="ChangePassword"
           component={ChangePassword}
+          options={{headerShown: false}}
+        />
+        <Auth.Screen
+          name="Otp"
+          component={Otp}
           options={{headerShown: false}}
         />
       </Auth.Navigator>
