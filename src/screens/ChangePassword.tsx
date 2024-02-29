@@ -7,10 +7,14 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import {useDispatch} from 'react-redux';
 import {login} from '../redux/authSlice';
+import { post } from '../networkcalls/requests';
+import { COLORS } from '../consts/colors';
+import InnerLoader from '../components/InnerLoader';
 
 const {width, height} = Dimensions.get('window');
 
@@ -20,38 +24,79 @@ const ChangePassword = props => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const dispatch = useDispatch();
+  const [innerLoading, setInnerLoading] = useState(false);
+
+  const validator = () => {
+    if (newPassword === '') {
+      Alert.alert('Info', 'New password is required.');
+      return false;
+    }
+    if (confirmPassword === '') {
+      Alert.alert('Info', 'Re-enter new password is required.');
+      return false;
+    }
+    if (newPassword !== confirmPassword) {
+      Alert.alert('Info', "Re-enter new password doesn't match");
+      return false;
+    }
+    return true;
+  };
+
+  const changePasswordHandler = async () => {
+    if (validator()) {
+      setInnerLoading(true);
+      try {
+        const response = await post('auth/forgotpassword', {
+         email: props.route.params.email,
+         password: newPassword
+        });
+        console.log(response?.data);
+        if (response?.data?.success) {
+          setInnerLoading(false);
+          Alert.alert('Success', response?.data?.message, [
+            {onPress: () => props.navigation.navigate('Login')},
+          ]);
+        }else{
+          setInnerLoading(false);
+          Alert.alert('Failed', response?.data?.message, [
+            {onPress: () => {}},
+          ]);
+        }
+      } catch (error) {
+        setInnerLoading(false);
+        console.log(error);
+      }
+    }
+  };
   return (
     <View style={styles.view}>
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
       <Text style={styles.head}>Password Change</Text>
       <View style={styles.inner}>
         <KeyboardAvoidingView behavior="padding">
-          <Text style={styles.text}>Old Password</Text>
-          <TextInput
-            style={styles.email}
-            onChange={(pass: string) => setOldPassword(pass)}
-            value={oldPassword}
-            placeholder="Enter Old Password"
-          />
           <Text style={styles.text}>New Password</Text>
           <TextInput
             style={styles.email}
-            onChange={(pass: string) => setNewPassword(pass)}
+            onChangeText={(pass: string) => setNewPassword(pass)}
             value={newPassword}
             placeholder="Enter New Password"
           />
           <Text style={styles.text}>Re-enter New Password</Text>
           <TextInput
             style={styles.email}
-            onChange={(pass: string) => setConfirmPassword(pass)}
+            onChangeText={(pass: string) => setConfirmPassword(pass)}
             value={confirmPassword}
             placeholder="Enter New Password"
           />
         </KeyboardAvoidingView>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => dispatch(login())}>
-          <Text style={styles.btnText}>Change</Text>
+          onPress={changePasswordHandler}>
+          {innerLoading ? (
+            <InnerLoader loading={innerLoading} />
+          ) : (
+            <Text style={styles.btnText}>Change</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
@@ -71,7 +116,7 @@ const styles = StyleSheet.create({
   inner: {
     backgroundColor: 'white',
     width: width * 0.9,
-    height: height * 0.45,
+    height: height * 0.35,
     borderRadius: 10,
     marginTop: 20,
     // alignItems: 'center',
@@ -99,7 +144,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   button: {
-    backgroundColor: '#AE1F31',
+    backgroundColor: COLORS.primary,
     width: width * 0.5,
     height: height * 0.05,
     alignSelf: 'center',
