@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View, Dimensions} from 'react-native';
 import React from 'react';
+import { COLORS } from '../consts/colors';
 
 const {width, height} = Dimensions.get('window');
 
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
   },
   msg: {
     fontSize: 15,
-    color: 'maroon',
+    color: COLORS.primary,
     fontFamily: 'SF-Pro-Text-Light',
   },
   point: {

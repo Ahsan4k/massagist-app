@@ -9,6 +9,7 @@ import {
 import React from 'react';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { COLORS } from '../consts/colors';
 
 const {width, height} = Dimensions.get('window');
 
@@ -93,7 +94,7 @@ const Reflexology = props => {
           <TouchableOpacity
             onPress={() => twoHandsOption(item, index)}
             style={styles.btn2}>
-            <Fontisto name={item.status} color="maroon" size={20} />
+            <Fontisto name={item.status} color={COLORS.primary} size={20} />
             <Text style={{marginLeft: 10}}>{item.time} minutes</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
@@ -105,7 +106,7 @@ const Reflexology = props => {
           <TouchableOpacity
             onPress={() => onCheckboxPress(item, index)}
             style={styles.btn2}>
-            <Fontisto name={item.status} color="maroon" size={20} />
+            <Fontisto name={item.status} color={COLORS.primary} size={20} />
             <Text style={{marginLeft: 10}}>{item.value}</Text>
           </TouchableOpacity>
           <Text>${item.price}</Text>
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
   book: {
     marginTop: 150,
     alignSelf: 'center',
-    backgroundColor: 'maroon',
+    backgroundColor: COLORS.primary,
     width: width * 0.9,
     height: height * 0.06,
     alignItems: 'center',

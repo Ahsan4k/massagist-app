@@ -1,5 +1,6 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
+import { COLORS } from '../consts/colors'
 
 const BackButton = ({onPress}) => {
   return (
@@ -13,7 +14,7 @@ export default BackButton
 
 const styles = StyleSheet.create({
   container:{
-    backgroundColor: 'maroon',
+    backgroundColor: COLORS.primary,
     width: 40,
     height: 40,
     borderRadius: 40,
