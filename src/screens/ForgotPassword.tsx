@@ -7,14 +7,48 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React from 'react';
+import {post} from '../networkcalls/requests';
+import InnerLoader from '../components/InnerLoader';
 
 const {width, height} = Dimensions.get('window');
 
 const ForgotPassword = props => {
   const {useState} = React;
   const [email, setEmail] = useState('');
+  const [innerLoading, setInnerLoading] = useState(false);
+
+  const validator = () => {
+    if (email === '') {
+      Alert.alert('Info', 'Email is required.');
+      return false;
+    }
+    return true;
+  };
+
+  const otpRequestHandler = async () => {
+    if (validator()) {
+      setInnerLoading(true);
+      try {
+        const response = await post('auth/requestotp', {
+          email: email.toLowerCase(),
+        });
+        console.log(response?.data);
+        if (response?.data?.success) {
+          setInnerLoading(false);
+          Alert.alert('Success', response?.data?.message, [
+            {onPress: () => props.navigation.navigate('ChangePassword')},
+          ]);
+        }
+      } catch (error) {
+        setInnerLoading(false);
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <View style={styles.view}>
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
@@ -24,15 +58,18 @@ const ForgotPassword = props => {
           <Text style={styles.text}>Email</Text>
           <TextInput
             style={styles.email}
-            onChange={(email: string) => setEmail(email)}
+            onChangeText={(email: string) => setEmail(email)}
             value={email}
             placeholder="Enter Email"
           />
         </KeyboardAvoidingView>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => props.navigation.navigate('ChangePassword')}>
-          <Text style={styles.btnText}>Request OTP</Text>
+
+        <TouchableOpacity style={styles.button} onPress={otpRequestHandler}>
+          {innerLoading ? (
+            <InnerLoader loading={innerLoading} />
+          ) : (
+            <Text style={styles.btnText}>Request OTP</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
