@@ -15,6 +15,7 @@ import Calendar from '../screens/Calendar';
 import ForgotPassword from '../screens/ForgotPassword';
 import ChangePassword from '../screens/ChangePassword';
 import Otp from '../screens/Otp';
+import BookingDetails from '../screens/BookingDetails';
 
 const MainNavigator = () => {
   const value = useSelector(state => state.auth.value);
@@ -105,6 +106,11 @@ const MainNavigator = () => {
         <Auth.Screen
           name="ChangePassword"
           component={ChangePassword}
+          options={{headerShown: false}}
+        />
+        <Auth.Screen
+          name="BookingDetails"
+          component={BookingDetails}
           options={{headerShown: false}}
         />
       </Main.Navigator>
