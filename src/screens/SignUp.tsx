@@ -77,7 +77,7 @@ const SignUp = props => {
         const response = await post('auth/signup', {
           firstName: firstName,
           lastName: lastName,
-          email: email,
+          email: email.toLowerCase(),
           phoneNumber: phoneNumber,
           password: password,
         });

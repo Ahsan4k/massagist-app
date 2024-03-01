@@ -7,32 +7,79 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React from 'react';
+import { post } from '../networkcalls/requests';
+import InnerLoader from '../components/InnerLoader';
 
 const {width, height} = Dimensions.get('window');
 
 const Otp = props => {
   const {useState} = React;
-  const [email, setEmail] = useState('');
+  const [otp, setOTP] = useState('');
+  const [innerLoading, setInnerLoading] = useState(false);
+
+  const validator = () => {
+    if (otp === '') {
+      Alert.alert('Info', 'OTP is required.');
+      return false;
+    }
+    return true;
+  };
+
+  const otpVerifyHandler = async () => {
+    if (validator()) {
+      setInnerLoading(true);
+      try {
+        const response = await post('auth/verify', {
+          otp: +otp,
+        });
+        console.log(response?.data);
+        if (response?.data?.success) {
+          setInnerLoading(false);
+          Alert.alert('Success', response?.data?.message, [
+            {onPress: () => props.navigation.navigate('ChangePassword', {
+              email: props.route.params.email
+            })},
+          ]);
+        }else{
+          setInnerLoading(false);
+          Alert.alert('Failed', response?.data?.message, [
+            {onPress: () => {}},
+          ]);
+        }
+      } catch (error) {
+        setInnerLoading(false);
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <View style={styles.view}>
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
-      <Text style={styles.head}>Login</Text>
+      <Text style={styles.head}>OTP Verification</Text>
       <View style={styles.inner}>
         <KeyboardAvoidingView behavior="padding">
           <Text style={styles.text}>Otp</Text>
           <TextInput
             style={styles.email}
-            onChange={(email: string) => setEmail(email)}
-            value={email}
+            onChangeText={(otp: string) => setOTP(otp)}
+            value={otp}
+            keyboardType='numeric'
+            placeholderTextColor={'#ccc'}
             placeholder="Enter Otp"
           />
         </KeyboardAvoidingView>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => props.navigation.navigate('ChangePassword')}>
-          <Text style={styles.btnText}>Request OTP</Text>
+          onPress={otpVerifyHandler}>
+           {innerLoading ? (
+            <InnerLoader loading={innerLoading} />
+          ) : (
+            <Text style={styles.btnText}>Verify OTP</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
