@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {StyleSheet, Text, View, Dimensions, FlatList} from 'react-native';
 import React, {useState, useCallback} from 'react';
 import {COLORS} from '../consts/colors';
 import {useFocusEffect} from '@react-navigation/native';
@@ -9,19 +9,18 @@ const {width, height} = Dimensions.get('window');
 
 const Notifications = () => {
   const [savedBookings, setSavedBookings] = useState([]);
+  console.log("SAVED BOOKINGS ", savedBookings)
 
   useFocusEffect(
     useCallback(() => {
       const getBookings = async () => {
         const bookings = await AsyncStorage.getItem('tempBookings');
-        if (bookings !== null) {
-          setSavedBookings(bookings as any);
+        const parsed = bookings !== null ? JSON.parse(bookings) : null
+        if (parsed) {
+          setSavedBookings(parsed);
         }
       };
       getBookings();
-      return async () => {
-        await AsyncStorage.removeItem('tempBookings');
-      };
     }, []),
   );
 
@@ -37,17 +36,21 @@ const Notifications = () => {
 
   return (
     <SafeAreaView style={styles.main}>
-      {savedBookings?.map((items: any) => (
-        <View style={styles.box}>
-          <View style={styles.point} />
-          <View style={styles.tab}>
-            <Text style={styles.msg}>
-              Your appointment has been booked for {items?.date} from{' '}
-              {items?.startTime} to {items?.endTime}
-            </Text>
-          </View>
+      <FlatList
+      contentContainerStyle={{paddingBottom:60}}
+      data={savedBookings.reverse()}
+      renderItem={({item, index}) => (
+        <View style={styles.box} key={index}>
+        <View style={styles.point} />
+        <View style={styles.tab}>
+          <Text style={styles.msg}>
+            Your appointment has been booked for {item?.date} from{' '}
+            {item?.startTime} to {item?.endTime}
+          </Text>
         </View>
-      ))}
+      </View>
+      )}
+      />
     </SafeAreaView>
   );
 };

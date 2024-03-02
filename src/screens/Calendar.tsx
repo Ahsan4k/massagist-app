@@ -39,7 +39,7 @@ const Book = props => {
   const [endTime, setEndTime] = useState('');
   const user = useSelector((state: any) => state.auth.data);
   const booked = useSelector((state: any) => state.booking.bookings);
-  const [savedBookings, setSavedBookings] = useState(booked);
+  const [savedBookings, setSavedBookings] = useState([]);
   const dispatch = useDispatch();
 
   const createTimeSlots = (fromTime: any, toTime: any, duration: string) => {
@@ -83,19 +83,28 @@ const Book = props => {
     getBookings();
   }, [selectedDay]);
 
-  useEffect(() => {
-    const getSyncedBookings = async () => {
-      const saved = await AsyncStorage.getItem('tempBookings');
-      if(saved){
-        setSavedBookings(saved)
-      }
-    }
-    getSyncedBookings();
-  },[])
 
-  console.log("SAVED => ", savedBookings)
+  const syncBookingsHandler = async () => {
+    let copy = [...savedBookings];
+    let merged = [...copy , {
+      type,
+      startTime,
+      endTime,
+      date: selectedDay.dateString,
+      duration: duration.time,
+      count: 1,
+      token: user?.data?.token,
+      email: user?.data?.email,
+      hands: duration.hands,
+      price: duration.price
+    }]
+    await AsyncStorage.setItem('tempBookings', JSON.stringify(merged))
+  }
 
+
+  console.log("BOOKINGS ", savedBookings.length)
   const bookAppointmentHandler = async () => {
+    syncBookingsHandler();
     if(selectedTime === ''){
       return Alert.alert('Info', 'Please select any timeslot.')
     }
@@ -106,23 +115,16 @@ const Book = props => {
         startTime,
         endTime,
         date: selectedDay.dateString,
-        duration: duration,
+        duration: duration.time,
         count: 1,
         token: user?.data?.token,
+        email: user?.data?.email,
+        hands: duration.hands,
+        price: duration.price
       });
       if (response?.data?.status === 'Success') {
         setInnerLoading(false);
-        const merged = [...savedBookings , {
-          type,
-          startTime,
-          endTime,
-          date: selectedDay.dateString,
-          duration: duration,
-          count: 1,
-          token: user?.data?.token,
-        }]
-        await AsyncStorage.setItem('tempBookings', JSON.stringify(merged))
-        console.log("APPOINTMENT", merged)
+        syncBookingsHandler();
         Alert.alert('Success', 'Your appointment has been booked!', [
           {onPress: () => getBookings()},
         ]);
@@ -139,6 +141,18 @@ const Book = props => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const getSyncedBookings = async () => {
+      const saved = await AsyncStorage.getItem('tempBookings');
+      const parsed = saved !== null ? JSON.parse(saved) : null
+      if(saved){
+        setSavedBookings(parsed)
+      }
+    }
+    getSyncedBookings();
+  },[])
+
 
   if (loading) {
     return (
