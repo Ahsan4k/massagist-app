@@ -9,22 +9,23 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
-import React from 'react';
-import {useDispatch} from 'react-redux';
-import {login} from '../redux/authSlice';
+import React, { useEffect } from 'react';
 import { post } from '../networkcalls/requests';
 import { COLORS } from '../consts/colors';
 import InnerLoader from '../components/InnerLoader';
+import { useSelector } from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 
 const ChangePassword = props => {
   const {useState} = React;
-  const [oldPassword, setOldPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const dispatch = useDispatch();
   const [innerLoading, setInnerLoading] = useState(false);
+  const user = useSelector((state: any) => state.auth.data);
+
+  console.log(email)
 
   const validator = () => {
     if (newPassword === '') {
@@ -47,14 +48,21 @@ const ChangePassword = props => {
       setInnerLoading(true);
       try {
         const response = await post('auth/forgotpassword', {
-         email: props.route.params.email,
+         email: email,
          password: newPassword
         });
         console.log(response?.data);
         if (response?.data?.success) {
           setInnerLoading(false);
           Alert.alert('Success', response?.data?.message, [
-            {onPress: () => props.navigation.navigate('Login')},
+            {onPress: () => {
+              if(props.route.params?.email){
+                props.navigation.navigate('Login')
+              }else{
+                props.navigation.goBack()
+              }
+             
+            }},
           ]);
         }else{
           setInnerLoading(false);
@@ -68,6 +76,15 @@ const ChangePassword = props => {
       }
     }
   };
+
+  useEffect(() => {
+    if(props.route.params?.email){
+      setEmail(props.route.params?.email)
+    }else{
+      setEmail(user?.data?.email)
+    }
+  },[])
+
   return (
     <View style={styles.view}>
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
