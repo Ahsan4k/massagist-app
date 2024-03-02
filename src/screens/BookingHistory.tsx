@@ -43,54 +43,6 @@ const BookingHistory = () => {
     );
   }
 
-  const bookingHistory = [
-    {
-      type: 'Body Massage',
-      hands: '4',
-      duration: '30',
-      date: '2024-03-10',
-      startTime: '9:30',
-      endTime: '10:00',
-      price: '100',
-    },
-    {
-      type: 'Reflexology',
-      additional: 'Deep Tissue',
-      duration: '30',
-      date: '2024-03-10',
-      startTime: '9:30',
-      endTime: '10:00',
-      price: '150',
-    },
-    {
-      type: 'Body Massage',
-      hands: '2',
-      duration: '30',
-      date: '2024-03-10',
-      startTime: '9:30',
-      endTime: '10:00',
-      price: '120',
-    },
-    {
-      type: 'Reflexology',
-      additional: 'TS or Sauna & DT',
-      duration: '30',
-      date: '2024-03-10',
-      startTime: '9:30',
-      endTime: '10:00',
-      price: '130',
-    },
-    {
-      type: 'Reflexology',
-      additional: 'N/A',
-      duration: '30',
-      date: '2024-03-10',
-      startTime: '9:30',
-      endTime: '10:00',
-      price: '110',
-    },
-  ];
-
   return (
     <View style={styles.main}>
       <FlatList
@@ -98,7 +50,7 @@ const BookingHistory = () => {
         data={data}
         keyExtractor={(item, index) => index}
         renderItem={({item, index}) =>
-          item.type == 'Body' ? (
+          item.type == 'Body Massage' ? (
             <View style={styles.card}>
               <View style={styles.direction}>
                 <Text style={styles.margin}>Type: {item.type}</Text>
