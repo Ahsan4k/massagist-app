@@ -27,15 +27,15 @@ const Login = props => {
 
   const validator = () => {
     if (email === '' && password === '') {
-      Alert.alert("Info", "Email and password are required.")
+      Alert.alert('Info', 'Email and password are required.');
       return false;
     }
     if (email === '') {
-      Alert.alert("Info", "Email is required.")
+      Alert.alert('Info', 'Email is required.');
       return false;
     }
     if (password === '') {
-      Alert.alert("Info", "Password is required.")
+      Alert.alert('Info', 'Password is required.');
       return false;
     }
     return true;
@@ -159,6 +159,8 @@ const styles = StyleSheet.create({
   text: {
     marginLeft: 10,
     marginTop: 10,
+    fontFamily: 'SF-Pro-Text-Bold',
+    fontSize: 15,
   },
   button: {
     backgroundColor: '#AE1F31',
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: 'white',
-    fontFamily: 'SF-Pro-Text-Bold',
+    fontFamily: 'SF-Pro-Text-Light',
     fontSize: 18,
   },
   dont: {

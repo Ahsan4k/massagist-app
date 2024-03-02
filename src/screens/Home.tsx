@@ -25,7 +25,7 @@ const Home = props => {
 
   const onPress = (item: string) => {
     item == 'Body Massage'
-      ? props.navigation.navigate('Body', {type: 'Body'})
+      ? props.navigation.navigate('Body', {type: 'Body Massage'})
       : props.navigation.navigate('Reflex', {type: 'Reflexology'});
   };
   return (

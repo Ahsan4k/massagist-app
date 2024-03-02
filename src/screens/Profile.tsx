@@ -14,7 +14,7 @@ import Modal from 'react-native-modal';
 import {useDispatch, useSelector} from 'react-redux';
 import {COLORS} from '../consts/colors';
 import {del, post} from '../networkcalls/requests';
-import {logout } from '../redux/authSlice';
+import {logout} from '../redux/authSlice';
 import InnerLoader from '../components/InnerLoader';
 
 const {width, height} = Dimensions.get('screen');
@@ -33,7 +33,7 @@ const Profile = props => {
     try {
       const response = await post('auth/logout', {token: user.data.token});
       if (response?.data?.success) {
-        dispatch(logout([]))
+        dispatch(logout([]));
         setInnerLoading(false);
       } else {
         setInnerLoading(false);
@@ -72,16 +72,17 @@ const Profile = props => {
           style={styles.tab}>
           <Text style={styles.text}>Change Password</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tab}>
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('BookingHistory')}
+          style={styles.tab}>
           <Text style={styles.text}>Booking History</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tab} onPress={logoutHandler}>
-        {innerLoading ? (
+          {innerLoading ? (
             <InnerLoader loading={innerLoading} />
           ) : (
             <Text style={styles.text}>Logout</Text>
           )}
-         
         </TouchableOpacity>
       </View>
       <Modal isVisible={visible}>
