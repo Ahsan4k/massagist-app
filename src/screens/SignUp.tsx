@@ -130,10 +130,14 @@ const SignUp = props => {
           <Text style={styles.text}>Phone number</Text>
           <TextInput
             style={styles.email}
-            onChangeText={(phone: string) => setPhoneNumber(phone)}
+            onChangeText={(phone: string) =>
+              phoneNumberRegex.test(phone) || phone == ''
+                ? setPhoneNumber(phone)
+                : null
+            }
             value={phoneNumber}
-            placeholder="Enter Phone number i.e (555) 555-1234"
-            maxLength={14}
+            placeholder="Enter Phone number (10 digits max)"
+            maxLength={10}
             keyboardType="numeric"
           />
           <Text style={styles.text}>Password</Text>
@@ -190,7 +194,7 @@ const styles = StyleSheet.create({
   inner: {
     backgroundColor: 'white',
     width: width * 0.9,
-    height: height * 0.6,
+    height: height * 0.62,
     borderRadius: 10,
     marginTop: 20,
     // alignItems: 'center',
@@ -216,7 +220,7 @@ const styles = StyleSheet.create({
   text: {
     marginLeft: 10,
     marginTop: 10,
-    fontFamily: 'SF-Pro-Text-Light',
+    fontFamily: 'SF-Pro-Text-Bold',
     fontSize: 15,
   },
   button: {
@@ -231,7 +235,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: 'white',
-    fontFamily: 'SF-Pro-Text-Bold',
+    fontFamily: 'SF-Pro-Text-Light',
     fontSize: 18,
   },
   dont: {

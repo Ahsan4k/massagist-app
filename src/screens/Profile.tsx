@@ -73,8 +73,8 @@ const Profile = props => {
           <Text style={styles.text}>Change Password</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.tab}
-          onPress={() => props.navigation.navigate('BookingHistory')}>
+          onPress={() => props.navigation.navigate('BookingHistory')}
+          style={styles.tab}>
           <Text style={styles.text}>Booking History</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tab} onPress={logoutHandler}>
