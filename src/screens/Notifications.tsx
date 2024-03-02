@@ -1,22 +1,54 @@
 import {StyleSheet, Text, View, Dimensions} from 'react-native';
-import React from 'react';
-import { COLORS } from '../consts/colors';
+import React, {useState, useCallback} from 'react';
+import {COLORS} from '../consts/colors';
+import {useFocusEffect} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width, height} = Dimensions.get('window');
 
 const Notifications = () => {
-  return (
-    <View style={styles.main}>
-      <View style={styles.margin} />
-      <View style={styles.box}>
-        <View style={styles.point} />
-        <View style={styles.tab}>
-          <Text style={styles.msg}>
-            Your appointment has been booked for Feburary 29, 2024 from 9am-10am
-          </Text>
-        </View>
+  const [savedBookings, setSavedBookings] = useState([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const getBookings = async () => {
+        const bookings = await AsyncStorage.getItem('tempBookings');
+        if (bookings !== null) {
+          setSavedBookings(bookings as any);
+        }
+      };
+      getBookings();
+      return async () => {
+        await AsyncStorage.removeItem('tempBookings');
+      };
+    }, []),
+  );
+
+  
+
+  if (savedBookings?.length === 0) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={{color: '#888', fontSize: 20}}> No new notifications</Text>
       </View>
-    </View>
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.main}>
+      {savedBookings?.map((items: any) => (
+        <View style={styles.box}>
+          <View style={styles.point} />
+          <View style={styles.tab}>
+            <Text style={styles.msg}>
+              Your appointment has been booked for {items?.date} from{' '}
+              {items?.startTime} to {items?.endTime}
+            </Text>
+          </View>
+        </View>
+      ))}
+    </SafeAreaView>
   );
 };
 
@@ -26,9 +58,9 @@ const styles = StyleSheet.create({
   main: {
     width: width,
     height: height,
-    backgroundColor: 'white',
   },
   tab: {
+    width: width / 1.1,
     borderWidth: 1,
     borderColor: 'red',
     padding: 10,
@@ -50,13 +82,13 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: width * 0.03,
     height: width * 0.03,
-    backgroundColor: 'darkpink',
+    backgroundColor: 'pink',
     marginLeft: 5,
     marginTop: 20,
   },
   box: {
     flexDirection: 'row',
-    justifyContnet: 'space-between',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
 });
