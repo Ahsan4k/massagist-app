@@ -17,7 +17,7 @@ const {width, height} = Dimensions.get('window');
 
 const BookingHistory = props => {
   const {useState, useEffect} = React;
-  const email = useSelector(state => state.auth.data.data.email);
+  const email = useSelector((state: any) => state.auth.data.email);
   const [data, setData] = useState([]);
   const [loading, isLoading] = useState(false);
 
@@ -90,7 +90,7 @@ const BookingHistory = props => {
             <View style={styles.card}>
               <View style={styles.direction}>
                 <Text style={styles.margin}>Type: {item.type}</Text>
-                <Text style={styles.size}>Additional: {item.additional}</Text>
+                <Text style={styles.text}>No. of Hands: {item.hands}</Text>
               </View>
               <View style={styles.direction}>
                 <Text style={styles.margin}>Date: {item.date}</Text>
@@ -100,7 +100,34 @@ const BookingHistory = props => {
                 <Text style={styles.margin}>Start Time: {item.startTime}</Text>
                 <Text style={styles.text}>End Time: {item.endTime}</Text>
               </View>
-              <Text style={styles.rate}>Price: ${item.price}</Text>
+              <View style={styles.direction}>
+                <Text style={[styles.rate, {marginTop: 0}]}>
+                  Price: ${item.price}
+                </Text>
+              </View>
+              <View
+                style={{
+                  marginTop: 20,
+                  flexDirection: 'row',
+                  alignItems: 'flex-end',
+                  justifyContent: 'space-between',
+                }}>
+                <View>
+                  <Text
+                    style={[styles.text, {textDecorationLine: 'underline'}]}>
+                    Add ons:
+                  </Text>
+                  {item.addons.map((e: any) => (
+                    <View style={{marginTop: 5}}>
+                      <Text style={{color: '#fff'}}>Item: {e?.value} </Text>
+                      <Text style={{color: '#fff'}}>Price: ${e.price} </Text>
+                    </View>
+                  ))}
+                </View>
+                <Text style={styles.text}>
+                  Total: ${item.addons.map((e: any) => +e.price + +item.price)}
+                </Text>
+              </View>
             </View>
           )
         }
@@ -123,6 +150,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 20,
     padding: 20,
+    paddingTop: 12,
     borderRadius: 10,
   },
   list: {
