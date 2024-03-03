@@ -13,8 +13,8 @@ import React from 'react';
 import Modal from 'react-native-modal';
 import {useDispatch, useSelector} from 'react-redux';
 import {COLORS} from '../consts/colors';
-import {del, post} from '../networkcalls/requests';
-import {logout} from '../redux/authSlice';
+import {del, patch, post} from '../networkcalls/requests';
+import {changeNumber, logout} from '../redux/authSlice';
 import InnerLoader from '../components/InnerLoader';
 
 const {width, height} = Dimensions.get('screen');
@@ -42,6 +42,22 @@ const Profile = props => {
     } catch (error) {
       setInnerLoading(false);
       console.log(error);
+    }
+  };
+
+  const updateNumber = async () => {
+    if (phoneNumber != user.data.phoneNumber) {
+      try {
+        await patch('auth/changeNumber', {
+          number: phoneNumber,
+        });
+        setVisible(false);
+        dispatch(changeNumber({number: phoneNumber}));
+        Alert.alert('Message', 'Your phone number was updated', [{text: 'Ok'}]);
+      } catch (error) {
+        setVisible(false);
+        Alert.alert('Message', 'Sorry, there was some error', [{text: 'Ok'}]);
+      }
     }
   };
 
@@ -98,12 +114,12 @@ const Profile = props => {
           <TextInput
             placeholder="Phone Number"
             placeholderTextColor="#ccc"
-            onChange={phone => setPhoneNumber(phone)}
+            onChangeText={phone => setPhoneNumber(phone)}
             value={phoneNumber}
             style={styles.input}
           />
-          <TouchableOpacity onPress={() => {}} style={styles.btn}>
-            <Text style={styles.btnText}>Change</Text>
+          <TouchableOpacity onPress={updateNumber} style={styles.btn}>
+            <Text style={styles.btnText}>Update</Text>
           </TouchableOpacity>
         </View>
       </Modal>
