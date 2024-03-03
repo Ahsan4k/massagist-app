@@ -16,7 +16,9 @@ import {post, get} from '../networkcalls/requests';
 import axios from 'axios';
 import {COLORS} from '../consts/colors';
 import InnerLoader from '../components/InnerLoader';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {saveBookings} from '../redux/bookingSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width, height} = Dimensions.get('window');
 
@@ -36,8 +38,9 @@ const Book = props => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const user = useSelector((state: any) => state.auth.data);
-
-  console.log(timeSlots);
+  const booked = useSelector((state: any) => state.booking.bookings);
+  const [savedBookings, setSavedBookings] = useState([]);
+  const dispatch = useDispatch();
 
   const createTimeSlots = (fromTime: any, toTime: any, duration: string) => {
     let startTime = moment(fromTime, 'hh:mm A');
@@ -80,7 +83,31 @@ const Book = props => {
     getBookings();
   }, [selectedDay]);
 
+
+  const syncBookingsHandler = async () => {
+    let copy = [...savedBookings];
+    let merged = [...copy , {
+      type,
+      startTime,
+      endTime,
+      date: selectedDay.dateString,
+      duration: duration.time,
+      count: 1,
+      token: user?.data?.token,
+      email: user?.data?.email,
+      hands: duration.hands,
+      price: duration.price
+    }]
+    await AsyncStorage.setItem('tempBookings', JSON.stringify(merged))
+  }
+
+
+  console.log("BOOKINGS ", savedBookings.length)
   const bookAppointmentHandler = async () => {
+    syncBookingsHandler();
+    if(selectedTime === ''){
+      return Alert.alert('Info', 'Please select any timeslot.')
+    }
     setInnerLoading(true);
     try {
       const response = await post('book/bookDate', {
@@ -88,24 +115,44 @@ const Book = props => {
         startTime,
         endTime,
         date: selectedDay.dateString,
-        duration: duration,
+        duration: duration.time,
         count: 1,
         token: user?.data?.token,
+        email: user?.data?.email,
+        hands: duration.hands,
+        price: duration.price
       });
       if (response?.data?.status === 'Success') {
         setInnerLoading(false);
+        syncBookingsHandler();
         Alert.alert('Success', 'Your appointment has been booked!', [
           {onPress: () => getBookings()},
         ]);
       } else if (response?.data?.status === 'Failed') {
-        setInnerLoading(false)
-        Alert.alert('Failed', "You or someone has already booked this slot for today", [{onPress: () => {}}]);
+        setInnerLoading(false);
+        Alert.alert(
+          'Failed',
+          'You or someone has already booked this slot for today',
+          [{onPress: () => {}}],
+        );
       }
     } catch (error) {
       setInnerLoading(false);
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const getSyncedBookings = async () => {
+      const saved = await AsyncStorage.getItem('tempBookings');
+      const parsed = saved !== null ? JSON.parse(saved) : null
+      if(saved){
+        setSavedBookings(parsed)
+      }
+    }
+    getSyncedBookings();
+  },[])
+
 
   if (loading) {
     return (
@@ -129,7 +176,8 @@ const Book = props => {
         (items: any) =>
           items.startTime === startTime &&
           items.endTime === endTime &&
-          items.count === (duration?.hands === '4' && items.count !== 2 ? 1 : 2)
+          items.count ===
+            (duration?.hands === '4' && items.count !== 2 ? 1 : 2),
       )
     ) {
       return true;
