@@ -27,6 +27,7 @@ const Book = props => {
   const type = props.route.params.value.type;
   const duration = props.route.params?.selectedValue;
   const addons = props.route.params?.checkBoxValue;
+  console.log("check", addons)
   const [selectedDay, setSelectedDay] = useState({
     dateString: moment(new Date()).format('YYYY-MM-DD'),
   });

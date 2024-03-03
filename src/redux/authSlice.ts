@@ -16,12 +16,12 @@ const AuthSlice = createSlice({
       state.data = action.payload;
       state.value = false;
     },
-    changeNumber: (state, action) => {
-      state.data.phoneNumber = action.payload.number;
+    updateUser: (state, action) => {
+      state.data = {...state.data, ...action.payload}
     },
   },
 });
 
-export const {login, signUp, logout, changeNumber} = AuthSlice.actions;
+export const {login, signUp, logout, updateUser} = AuthSlice.actions;
 
 export default AuthSlice.reducer;

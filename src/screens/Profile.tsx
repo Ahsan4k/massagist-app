@@ -14,7 +14,7 @@ import Modal from 'react-native-modal';
 import {useDispatch, useSelector} from 'react-redux';
 import {COLORS} from '../consts/colors';
 import {del, patch, post} from '../networkcalls/requests';
-import {changeNumber, logout} from '../redux/authSlice';
+import {login, logout, updateUser} from '../redux/authSlice';
 import InnerLoader from '../components/InnerLoader';
 
 const {width, height} = Dimensions.get('screen');
@@ -23,7 +23,7 @@ const Profile = props => {
   const {useState} = React;
   const [visible, setVisible] = useState<boolean>(false);
   const user = useSelector((state: any) => state.auth.data);
-  const [phoneNumber, setPhoneNumber] = useState(user.data.phoneNumber);
+  const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
   const [innerLoading, setInnerLoading] = useState(false);
   const dispatch = useDispatch();
   console.log(user);
@@ -31,7 +31,7 @@ const Profile = props => {
   const logoutHandler = async () => {
     setInnerLoading(true);
     try {
-      const response = await post('auth/logout', {token: user.data.token});
+      const response = await post('auth/logout', {token: user.token});
       if (response?.data?.success) {
         dispatch(logout([]));
         setInnerLoading(false);
@@ -46,13 +46,14 @@ const Profile = props => {
   };
 
   const updateNumber = async () => {
-    if (phoneNumber != user.data.phoneNumber) {
+    if (phoneNumber != user.phoneNumber) {
       try {
         await patch('auth/changeNumber', {
+          email: user.email,
           number: phoneNumber,
         });
         setVisible(false);
-        dispatch(changeNumber({number: phoneNumber}));
+        dispatch(updateUser({phoneNumber: phoneNumber}))
         Alert.alert('Message', 'Your phone number is updated successfully.', [{text: 'Ok'}]);
       } catch (error) {
         console.log(error)
@@ -67,16 +68,16 @@ const Profile = props => {
       <View style={styles.window}>
         <View style={styles.inner}>
           <View style={styles.circle}>
-            <Text style={styles.name}>{`${user.data.firstName.slice(
+            <Text style={styles.name}>{`${user.firstName.slice(
               0,
               1,
-            )}${user.data.lastName.slice(0, 1)}`}</Text>
+            )}${user.lastName.slice(0, 1)}`}</Text>
           </View>
           <Text
             style={
               styles.des
-            }>{`${user.data.firstName} ${user.data.lastName}`}</Text>
-          <Text style={styles.des}>{user.data.email}</Text>
+            }>{`${user.firstName} ${user.lastName}`}</Text>
+          <Text style={styles.des}>{user.email}</Text>
           <Text style={styles.des}>{phoneNumber}</Text>
         </View>
         <TouchableOpacity
