@@ -53,8 +53,9 @@ const Profile = props => {
         });
         setVisible(false);
         dispatch(changeNumber({number: phoneNumber}));
-        Alert.alert('Message', 'Your phone number was updated', [{text: 'Ok'}]);
+        Alert.alert('Message', 'Your phone number is updated successfully.', [{text: 'Ok'}]);
       } catch (error) {
+        console.log(error)
         setVisible(false);
         Alert.alert('Message', 'Sorry, there was some error', [{text: 'Ok'}]);
       }

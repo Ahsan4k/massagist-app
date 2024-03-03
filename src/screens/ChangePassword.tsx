@@ -9,11 +9,13 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
-import React, { useEffect } from 'react';
-import { post } from '../networkcalls/requests';
-import { COLORS } from '../consts/colors';
+import React, {useEffect} from 'react';
+import {post} from '../networkcalls/requests';
+import {COLORS} from '../consts/colors';
 import InnerLoader from '../components/InnerLoader';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
+import BackButton from '../components/BackButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
@@ -25,7 +27,7 @@ const ChangePassword = props => {
   const [innerLoading, setInnerLoading] = useState(false);
   const user = useSelector((state: any) => state.auth.data);
 
-  console.log(email)
+  console.log(email);
 
   const validator = () => {
     if (newPassword === '') {
@@ -48,27 +50,26 @@ const ChangePassword = props => {
       setInnerLoading(true);
       try {
         const response = await post('auth/forgotpassword', {
-         email: email,
-         password: newPassword
+          email: email,
+          password: newPassword,
         });
         console.log(response?.data);
         if (response?.data?.success) {
           setInnerLoading(false);
           Alert.alert('Success', response?.data?.message, [
-            {onPress: () => {
-              if(props.route.params?.email){
-                props.navigation.navigate('Login')
-              }else{
-                props.navigation.goBack()
-              }
-             
-            }},
+            {
+              onPress: () => {
+                if (props.route.params?.email) {
+                  props.navigation.navigate('Login');
+                } else {
+                  props.navigation.goBack();
+                }
+              },
+            },
           ]);
-        }else{
+        } else {
           setInnerLoading(false);
-          Alert.alert('Failed', response?.data?.message, [
-            {onPress: () => {}},
-          ]);
+          Alert.alert('Failed', response?.data?.message, [{onPress: () => {}}]);
         }
       } catch (error) {
         setInnerLoading(false);
@@ -78,45 +79,53 @@ const ChangePassword = props => {
   };
 
   useEffect(() => {
-    if(props.route.params?.email){
-      setEmail(props.route.params?.email)
-    }else{
-      setEmail(user?.data?.email)
+    if (props.route.params?.email) {
+      setEmail(props.route.params?.email);
+    } else {
+      setEmail(user?.data?.email);
     }
-  },[])
+  }, []);
 
   return (
-    <View style={styles.view}>
-      <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
-      <Text style={styles.head}>Password Change</Text>
-      <View style={styles.inner}>
-        <KeyboardAvoidingView behavior="padding">
-          <Text style={styles.text}>New Password</Text>
-          <TextInput
-            style={styles.email}
-            onChangeText={(pass: string) => setNewPassword(pass)}
-            value={newPassword}
-            placeholder="Enter New Password"
-          />
-          <Text style={styles.text}>Re-enter New Password</Text>
-          <TextInput
-            style={styles.email}
-            onChangeText={(pass: string) => setConfirmPassword(pass)}
-            value={confirmPassword}
-            placeholder="Enter New Password"
-          />
-        </KeyboardAvoidingView>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={changePasswordHandler}>
-          {innerLoading ? (
-            <InnerLoader loading={innerLoading} />
-          ) : (
-            <Text style={styles.btnText}>Change</Text>
-          )}
-        </TouchableOpacity>
+    <SafeAreaView style={styles.view}>
+      <View style={{marginHorizontal: 10}}>
+        <BackButton onPress={() => props.navigation.goBack()} />
       </View>
-    </View>
+      <View style={{marginTop: width / 5, alignItems: 'center'}} >
+        <Image
+          source={require('../assets/loginIcon.png')}
+          style={styles.logo}
+        />
+        <Text style={styles.head}>Password Change</Text>
+        <View style={styles.inner}>
+          <KeyboardAvoidingView behavior="padding">
+            <Text style={styles.text}>New Password</Text>
+            <TextInput
+              style={styles.email}
+              onChangeText={(pass: string) => setNewPassword(pass)}
+              value={newPassword}
+              placeholder="Enter New Password"
+            />
+            <Text style={styles.text}>Re-enter New Password</Text>
+            <TextInput
+              style={styles.email}
+              onChangeText={(pass: string) => setConfirmPassword(pass)}
+              value={confirmPassword}
+              placeholder="Enter New Password"
+            />
+          </KeyboardAvoidingView>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={changePasswordHandler}>
+            {innerLoading ? (
+              <InnerLoader loading={innerLoading} />
+            ) : (
+              <Text style={styles.btnText}>Change</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -124,11 +133,8 @@ export default ChangePassword;
 
 const styles = StyleSheet.create({
   view: {
-    width: width,
-    height: height,
+    flex: 1,
     backgroundColor: '#AE1F31',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   inner: {
     backgroundColor: 'white',

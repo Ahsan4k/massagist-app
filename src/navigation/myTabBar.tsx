@@ -16,9 +16,6 @@ const ICONS = [
   {
     name: 'home',
   },
-  // {
-  //   name: 'cart-outline',
-  // },
   {
     name: 'bell',
   },
@@ -59,7 +56,7 @@ function MyTabBar({state, descriptors, navigation}) {
           });
         };
         return (
-          <View>
+          <View key={index}>
             <TouchableOpacity
               accessibilityRole="button"
               accessibilityState={isFocused ? {selected: true} : {}}
