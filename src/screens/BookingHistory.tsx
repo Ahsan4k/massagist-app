@@ -38,6 +38,14 @@ const BookingHistory = props => {
     getBookingHistory();
   }, []);
 
+  const sumValuesHandler = (val1: number, addonsPriceArray: any) => {
+    let sum = 0;
+    for (let i = 0; i < addonsPriceArray.length; i++) {
+      sum += +addonsPriceArray[i].price;
+    }
+    return sum + +val1;
+  };
+
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -117,15 +125,18 @@ const BookingHistory = props => {
                     style={[styles.text, {textDecorationLine: 'underline'}]}>
                     Add ons:
                   </Text>
-                  {item.addons.map((e: any) => (
-                    <View style={{marginTop: 5}}>
+                  {item.addons.map((e: any, index:any) => (
+                    <View style={{marginTop: 5}} key={index}>
                       <Text style={{color: '#fff'}}>Item: {e?.value} </Text>
                       <Text style={{color: '#fff'}}>Price: ${e.price} </Text>
                     </View>
                   ))}
                 </View>
                 <Text style={styles.text}>
-                  Total: ${item.addons.map((e: any) => +e.price + +item.price)}
+                  Total: $
+                  {item.addons?.length === 0
+                    ? item?.price
+                    : sumValuesHandler(item.price, item.addons)}
                 </Text>
               </View>
             </View>

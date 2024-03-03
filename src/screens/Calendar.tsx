@@ -117,8 +117,8 @@ const Book = props => {
         date: selectedDay.dateString,
         duration: duration.time,
         count: 1,
-        token: user?.data?.token,
-        email: user?.data?.email,
+        token: user?.token,
+        email: user?.email,
         hands: duration.hands,
         price: duration.price,
         addons: addons
