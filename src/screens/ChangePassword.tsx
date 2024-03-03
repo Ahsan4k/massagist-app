@@ -82,7 +82,7 @@ const ChangePassword = props => {
     if (props.route.params?.email) {
       setEmail(props.route.params?.email);
     } else {
-      setEmail(user?.data?.email);
+      setEmail(user?.email);
     }
   }, []);
 
