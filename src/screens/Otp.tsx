@@ -10,8 +10,10 @@ import {
   Alert,
 } from 'react-native';
 import React from 'react';
-import { post } from '../networkcalls/requests';
+import {post} from '../networkcalls/requests';
 import InnerLoader from '../components/InnerLoader';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import BackButton from '../components/BackButton';
 
 const {width, height} = Dimensions.get('window');
 
@@ -39,15 +41,16 @@ const Otp = props => {
         if (response?.data?.success) {
           setInnerLoading(false);
           Alert.alert('Success', response?.data?.message, [
-            {onPress: () => props.navigation.navigate('ChangePassword', {
-              email: props.route.params.email
-            })},
+            {
+              onPress: () =>
+                props.navigation.navigate('ChangePassword', {
+                  email: props.route.params.email,
+                }),
+            },
           ]);
-        }else{
+        } else {
           setInnerLoading(false);
-          Alert.alert('Failed', response?.data?.message, [
-            {onPress: () => {}},
-          ]);
+          Alert.alert('Failed', response?.data?.message, [{onPress: () => {}}]);
         }
       } catch (error) {
         setInnerLoading(false);
@@ -57,32 +60,38 @@ const Otp = props => {
   };
 
   return (
-    <View style={styles.view}>
-      <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
-      <Text style={styles.head}>OTP Verification</Text>
-      <View style={styles.inner}>
-        <KeyboardAvoidingView behavior="padding">
-          <Text style={styles.text}>Otp</Text>
-          <TextInput
-            style={styles.email}
-            onChangeText={(otp: string) => setOTP(otp)}
-            value={otp}
-            keyboardType='numeric'
-            placeholderTextColor={'#ccc'}
-            placeholder="Enter Otp"
-          />
-        </KeyboardAvoidingView>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={otpVerifyHandler}>
-           {innerLoading ? (
-            <InnerLoader loading={innerLoading} />
-          ) : (
-            <Text style={styles.btnText}>Verify OTP</Text>
-          )}
-        </TouchableOpacity>
+    <SafeAreaView style={styles.view}>
+      <View style={{marginHorizontal: 10}}>
+        <BackButton onPress={() => props.navigation.goBack()} />
       </View>
-    </View>
+      <View style={{marginTop: width / 4, alignItems: 'center'}}>
+        <Image
+          source={require('../assets/loginIcon.png')}
+          style={styles.logo}
+        />
+        <Text style={styles.head}>OTP Verification</Text>
+        <View style={styles.inner}>
+          <KeyboardAvoidingView behavior="padding">
+            <Text style={styles.text}>Otp</Text>
+            <TextInput
+              style={styles.email}
+              onChangeText={(otp: string) => setOTP(otp)}
+              value={otp}
+              keyboardType="numeric"
+              placeholderTextColor={'#ccc'}
+              placeholder="Enter Otp"
+            />
+          </KeyboardAvoidingView>
+          <TouchableOpacity style={styles.button} onPress={otpVerifyHandler}>
+            {innerLoading ? (
+              <InnerLoader loading={innerLoading} />
+            ) : (
+              <Text style={styles.btnText}>Verify OTP</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -90,11 +99,8 @@ export default Otp;
 
 const styles = StyleSheet.create({
   view: {
-    width: width,
-    height: height,
+    flex: 1,
     backgroundColor: '#AE1F31',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   inner: {
     backgroundColor: 'white',

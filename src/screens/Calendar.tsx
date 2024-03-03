@@ -19,6 +19,7 @@ import InnerLoader from '../components/InnerLoader';
 import {useDispatch, useSelector} from 'react-redux';
 import {saveBookings} from '../redux/bookingSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BackButton from '../components/BackButton';
 
 const {width, height} = Dimensions.get('window');
 
@@ -26,7 +27,8 @@ const Book = props => {
   const {useState, useEffect} = React;
   const type = props.route.params.value.type;
   const duration = props.route.params?.selectedValue;
-  console.log(duration);
+  const addons = props.route.params?.checkBoxValue;
+  console.log("check", addons)
   const [selectedDay, setSelectedDay] = useState({
     dateString: moment(new Date()).format('YYYY-MM-DD'),
   });
@@ -96,13 +98,12 @@ const Book = props => {
       token: user?.data?.token,
       email: user?.data?.email,
       hands: duration.hands,
-      price: duration.price
+      price: duration.price,
+      addons: addons
     }]
     await AsyncStorage.setItem('tempBookings', JSON.stringify(merged))
   }
 
-
-  console.log("BOOKINGS ", savedBookings.length)
   const bookAppointmentHandler = async () => {
     syncBookingsHandler();
     if(selectedTime === ''){
@@ -117,10 +118,11 @@ const Book = props => {
         date: selectedDay.dateString,
         duration: duration.time,
         count: 1,
-        token: user?.data?.token,
-        email: user?.data?.email,
+        token: user?.token,
+        email: user?.email,
         hands: duration.hands,
-        price: duration.price
+        price: duration.price,
+        addons: addons
       });
       if (response?.data?.status === 'Success') {
         setInnerLoading(false);
@@ -189,6 +191,9 @@ const Book = props => {
   return (
     <SafeAreaView
       style={{width: width, height: height, backgroundColor: '#fff'}}>
+         <View style={{marginHorizontal: 10, marginBottom: 10}}>
+        <BackButton onPress={() => props.navigation.goBack()} />
+      </View>
       <Calendar
         minDate={moment(new Date()).format('YYYY-MM-DD')}
         onDayPress={onDayPress}

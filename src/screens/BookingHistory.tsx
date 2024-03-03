@@ -17,7 +17,7 @@ const {width, height} = Dimensions.get('window');
 
 const BookingHistory = props => {
   const {useState, useEffect} = React;
-  const email = useSelector(state => state.auth.data.data.email);
+  const email = useSelector((state: any) => state.auth.data.email);
   const [data, setData] = useState([]);
   const [loading, isLoading] = useState(false);
 
@@ -37,6 +37,14 @@ const BookingHistory = props => {
   useEffect(() => {
     getBookingHistory();
   }, []);
+
+  const sumValuesHandler = (val1: number, addonsPriceArray: any) => {
+    let sum = 0;
+    for (let i = 0; i < addonsPriceArray.length; i++) {
+      sum += +addonsPriceArray[i].price;
+    }
+    return sum + +val1;
+  };
 
   if (loading) {
     return (
@@ -87,10 +95,16 @@ const BookingHistory = props => {
               <Text style={styles.rate}>Price: ${item.price}</Text>
             </View>
           ) : (
-            <View style={styles.card}>
+            <View style={[styles.card, {marginTop: 25}]}>
+              {item?.count === 2 ? (
+                <View style={styles.topCard}>
+                  <Text style={{color: COLORS.primary}}>2 Bookings</Text>
+                </View>
+              ) : null}
+
               <View style={styles.direction}>
                 <Text style={styles.margin}>Type: {item.type}</Text>
-                <Text style={styles.size}>Additional: {item.additional}</Text>
+                <Text style={styles.text}>No. of Hands: {item.hands}</Text>
               </View>
               <View style={styles.direction}>
                 <Text style={styles.margin}>Date: {item.date}</Text>
@@ -100,7 +114,35 @@ const BookingHistory = props => {
                 <Text style={styles.margin}>Start Time: {item.startTime}</Text>
                 <Text style={styles.text}>End Time: {item.endTime}</Text>
               </View>
-              <Text style={styles.rate}>Price: ${item.price}</Text>
+              <View style={styles.direction}>
+                <Text style={[styles.rate, {marginTop: 0}]}>
+                  Price: ${item.price}
+                </Text>
+              </View>
+              <View style={styles.reflex}>
+                <View>
+                  <Text
+                    style={[styles.text, {textDecorationLine: 'underline'}]}>
+                    Add ons:
+                  </Text>
+                  {item.addons.length > 0 ? (
+                    item.addons.map((e: any, index: any) => (
+                      <View style={{marginTop: 5}} key={index}>
+                        <Text style={{color: '#fff'}}>Item: {e?.value} </Text>
+                        <Text style={{color: '#fff'}}>Price: ${e.price} </Text>
+                      </View>
+                    ))
+                  ) : (
+                    <Text style={{color: '#fff'}}>N/A</Text>
+                  )}
+                </View>
+                <Text style={styles.text}>
+                  Total: $
+                  {item.addons?.length === 0
+                    ? item?.price
+                    : sumValuesHandler(item.price, item.addons)}
+                </Text>
+              </View>
             </View>
           )
         }
@@ -123,6 +165,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 20,
     padding: 20,
+    paddingTop: 12,
     borderRadius: 10,
   },
   list: {
@@ -159,5 +202,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     backgroundColor: '#fff',
+  },
+  reflex: {
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+  },
+  topCard: {
+    position: 'absolute',
+    top: -15,
+    left: width / 3.2,
+    backgroundColor: '#fff',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    width: 100,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

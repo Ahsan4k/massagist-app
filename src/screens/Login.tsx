@@ -52,7 +52,7 @@ const Login = props => {
         console.log(response?.data);
         if (response?.data?.success) {
           setInnerLoading(false);
-          dispatch(login(response?.data));
+          dispatch(login(response?.data?.data));
         } else {
           setInnerLoading(false);
           Alert.alert('Failed', response?.data?.reason);
