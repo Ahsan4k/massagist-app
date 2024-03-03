@@ -19,6 +19,7 @@ import InnerLoader from '../components/InnerLoader';
 import {useDispatch, useSelector} from 'react-redux';
 import {saveBookings} from '../redux/bookingSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BackButton from '../components/BackButton';
 
 const {width, height} = Dimensions.get('window');
 
@@ -190,6 +191,9 @@ const Book = props => {
   return (
     <SafeAreaView
       style={{width: width, height: height, backgroundColor: '#fff'}}>
+         <View style={{marginHorizontal: 10, marginBottom: 10}}>
+        <BackButton onPress={() => props.navigation.goBack()} />
+      </View>
       <Calendar
         minDate={moment(new Date()).format('YYYY-MM-DD')}
         onDayPress={onDayPress}
