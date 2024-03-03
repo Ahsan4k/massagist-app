@@ -9,13 +9,10 @@ import {
 import React from 'react';
 import {post} from '../networkcalls/requests';
 import {useSelector} from 'react-redux';
-import BackButton from '../components/BackButton';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS} from '../consts/colors';
 
 const {width, height} = Dimensions.get('window');
 
-const BookingHistory = props => {
+const BookingHistory = () => {
   const {useState, useEffect} = React;
   const email = useSelector((state: any) => state.auth.data.email);
   const [data, setData] = useState([]);
@@ -54,28 +51,11 @@ const BookingHistory = props => {
     );
   }
 
-  if (data?.length === 0) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-        }}>
-        <Text style={{color: '#888', fontSize: 20}}> No Booking History</Text>
-      </View>
-    );
-  }
-
   return (
-    <SafeAreaView style={styles.main}>
-      <View style={{marginHorizontal: 10}}>
-        <BackButton onPress={() => props.navigation.goBack()} />
-      </View>
+    <View style={styles.main}>
       <FlatList
         style={styles.list}
-        data={data.reverse()}
+        data={data}
         keyExtractor={(item, index) => index}
         renderItem={({item, index}) =>
           item.type == 'Body Massage' ? (
@@ -147,7 +127,7 @@ const BookingHistory = props => {
           )
         }
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -161,7 +141,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: width * 0.9,
-    backgroundColor: COLORS.primary,
+    backgroundColor: 'maroon',
     alignSelf: 'center',
     marginTop: 20,
     padding: 20,
@@ -169,7 +149,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   list: {
-    marginTop: 20,
+    marginTop: 60,
   },
   type: {
     flexDirection: 'row',
