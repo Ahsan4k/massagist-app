@@ -10,25 +10,34 @@ import React from 'react';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { COLORS } from '../consts/colors';
+import BackButton from '../components/BackButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
 const Reflexology = props => {
   const {useState} = React;
   const value = props.route.params;
-  const [selectedValue, setSelectedValue] = useState({time: '', price: ''});
+  const [selectedValue, setSelectedValue] = useState({
+    time: '30 minutes',
+    price: '30',
+    hands: '2',
+    id: 0
+  });
   const [checkBoxValue, setCheckBoxValue] = useState<any>([]);
 
   const [twoHands, setTwoHands] = useState([
     {
       status: 'radio-btn-passive',
-      time: '30',
+      time: '30 minutes',
       price: '30',
+      hands: '2',
     },
     {
       status: 'radio-btn-passive',
-      time: '60',
+      time: '60 minutes',
       price: '45',
+      hands: '2',
     },
   ]);
 
@@ -44,19 +53,6 @@ const Reflexology = props => {
       price: '10',
     },
   ]);
-
-  const twoHandsOption = (item, index) => {
-    setTwoHands(
-      twoHands.map((two, number) => {
-        if (index == number) {
-          setSelectedValue(two);
-          return Object.assign({}, two, {status: 'radio-btn-active'});
-        } else {
-          return Object.assign({}, two, {status: 'radio-btn-passive'});
-        }
-      }),
-    );
-  };
 
   const onCheckboxPress = (item, index) => {
     setCheckbox(
@@ -84,21 +80,34 @@ const Reflexology = props => {
     );
   };
 
+  const selectOptionHandler = (item: any, index: any) => {
+    setSelectedValue({
+     hands: item.hands,
+     time: item.time,
+     price: item.price,
+     id: index
+    })
+ }
+
+
   console.log('checkBoxValue', checkBoxValue);
 
   return (
-    <View style={styles.window}>
-      <Image source={require('../assets/Rectangle5.png')} style={styles.img} />
+    <SafeAreaView style={styles.window}>
+          <View style={{marginHorizontal: 10}}>
+        <BackButton onPress={() => props.navigation.goBack()} />
+      </View>
+      <Image source={require('../assets/foot_massage2.webp')} style={styles.img} />
       {twoHands.map((item, index) => (
         <View style={styles.radio} key={index}>
-          <TouchableOpacity
-            onPress={() => twoHandsOption(item, index)}
-            style={styles.btn2}>
-            <Fontisto name={item.status} color={COLORS.primary} size={20} />
-            <Text style={{marginLeft: 10}}>{item.time} minutes</Text>
-          </TouchableOpacity>
-          <Text>${item.price}</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => selectOptionHandler(item, index)}
+          style={styles.btn}>
+          <Fontisto name={item.time === selectedValue.time && index === selectedValue.id ? 'radio-btn-active' : 'radio-btn-passive'} color={COLORS.primary} size={20} />
+          <Text style ={{marginLeft: 10}}>{item.time}</Text>
+        </TouchableOpacity>
+        <Text>${item.price}</Text>
+      </View>
       ))}
       <Text style={styles.four}>Additional options</Text>
       {checkBox.map((item, index) => (
@@ -121,9 +130,9 @@ const Reflexology = props => {
           })
         }
         style={styles.book}>
-        <Text style={styles.now}>Book Now</Text>
+        <Text style={styles.now}>Continue</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -137,7 +146,7 @@ const styles = StyleSheet.create({
   img: {
     width: width * 0.95,
     height: height * 0.3,
-    marginTop: 50,
+    marginTop: width / 15,
     alignSelf: 'center',
   },
   radio: {

@@ -26,7 +26,7 @@ const Book = props => {
   const {useState, useEffect} = React;
   const type = props.route.params.value.type;
   const duration = props.route.params?.selectedValue;
-  console.log(duration);
+  const addons = props.route.params?.checkBoxValue;
   const [selectedDay, setSelectedDay] = useState({
     dateString: moment(new Date()).format('YYYY-MM-DD'),
   });
@@ -96,13 +96,12 @@ const Book = props => {
       token: user?.data?.token,
       email: user?.data?.email,
       hands: duration.hands,
-      price: duration.price
+      price: duration.price,
+      addons: addons
     }]
     await AsyncStorage.setItem('tempBookings', JSON.stringify(merged))
   }
 
-
-  console.log("BOOKINGS ", savedBookings.length)
   const bookAppointmentHandler = async () => {
     syncBookingsHandler();
     if(selectedTime === ''){
@@ -120,7 +119,8 @@ const Book = props => {
         token: user?.data?.token,
         email: user?.data?.email,
         hands: duration.hands,
-        price: duration.price
+        price: duration.price,
+        addons: addons
       });
       if (response?.data?.status === 'Success') {
         setInnerLoading(false);
