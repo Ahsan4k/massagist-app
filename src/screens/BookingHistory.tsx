@@ -95,7 +95,13 @@ const BookingHistory = props => {
               <Text style={styles.rate}>Price: ${item.price}</Text>
             </View>
           ) : (
-            <View style={styles.card}>
+            <View style={[styles.card, {marginTop: 25}]}>
+              {item?.count === 2 ? (
+                <View style={styles.topCard}>
+                  <Text style={{color: COLORS.primary}}>2 Bookings</Text>
+                </View>
+              ) : null}
+
               <View style={styles.direction}>
                 <Text style={styles.margin}>Type: {item.type}</Text>
                 <Text style={styles.text}>No. of Hands: {item.hands}</Text>
@@ -113,24 +119,22 @@ const BookingHistory = props => {
                   Price: ${item.price}
                 </Text>
               </View>
-              <View
-                style={{
-                  marginTop: 20,
-                  flexDirection: 'row',
-                  alignItems: 'flex-end',
-                  justifyContent: 'space-between',
-                }}>
+              <View style={styles.reflex}>
                 <View>
                   <Text
                     style={[styles.text, {textDecorationLine: 'underline'}]}>
                     Add ons:
                   </Text>
-                  {item.addons.map((e: any, index:any) => (
-                    <View style={{marginTop: 5}} key={index}>
-                      <Text style={{color: '#fff'}}>Item: {e?.value} </Text>
-                      <Text style={{color: '#fff'}}>Price: ${e.price} </Text>
-                    </View>
-                  ))}
+                  {item.addons.length > 0 ? (
+                    item.addons.map((e: any, index: any) => (
+                      <View style={{marginTop: 5}} key={index}>
+                        <Text style={{color: '#fff'}}>Item: {e?.value} </Text>
+                        <Text style={{color: '#fff'}}>Price: ${e.price} </Text>
+                      </View>
+                    ))
+                  ) : (
+                    <Text style={{color: '#fff'}}>N/A</Text>
+                  )}
                 </View>
                 <Text style={styles.text}>
                   Total: $
@@ -198,5 +202,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     backgroundColor: '#fff',
+  },
+  reflex: {
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+  },
+  topCard: {
+    position: 'absolute',
+    top: -15,
+    left: width / 3.2,
+    backgroundColor: '#fff',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    width: 100,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -46,22 +46,27 @@ const Profile = props => {
   };
 
   const updateNumber = async () => {
-    if (phoneNumber != user.phoneNumber) {
+    setInnerLoading(true)
       try {
-        await patch('auth/changeNumber', {
+        const res = await patch('auth/changeNumber', {
           email: user.email,
           number: phoneNumber,
         });
-        setVisible(false);
-        dispatch(updateUser({phoneNumber: phoneNumber}))
-        Alert.alert('Message', 'Your phone number is updated successfully.', [{text: 'Ok'}]);
+        if(res){
+          setInnerLoading(false)
+          setVisible(false);
+          dispatch(updateUser({phoneNumber: phoneNumber}));
+          Alert.alert('Message', 'Your phone number is updated successfully.', [
+            {text: 'Ok'},
+          ]);
+        }
       } catch (error) {
-        console.log(error)
+        console.log(error);
+        setInnerLoading(false)
         setVisible(false);
         Alert.alert('Message', 'Sorry, there was some error', [{text: 'Ok'}]);
       }
     }
-  };
 
   return (
     <SafeAreaView style={styles.main}>
@@ -73,10 +78,7 @@ const Profile = props => {
               1,
             )}${user.lastName.slice(0, 1)}`}</Text>
           </View>
-          <Text
-            style={
-              styles.des
-            }>{`${user.firstName} ${user.lastName}`}</Text>
+          <Text style={styles.des}>{`${user.firstName} ${user.lastName}`}</Text>
           <Text style={styles.des}>{user.email}</Text>
           <Text style={styles.des}>{phoneNumber}</Text>
         </View>
@@ -121,7 +123,11 @@ const Profile = props => {
             style={styles.input}
           />
           <TouchableOpacity onPress={updateNumber} style={styles.btn}>
-            <Text style={styles.btnText}>Update</Text>
+            {innerLoading ? (
+              <InnerLoader loading={innerLoading} />
+            ) : (
+              <Text style={styles.btnText}>Update</Text>
+            )}
           </TouchableOpacity>
         </View>
       </Modal>
@@ -143,6 +149,7 @@ const styles = StyleSheet.create({
     height: '90%',
     backgroundColor: 'white',
     alignItems: 'center',
+    borderRadius: 10,
   },
   inner: {
     alignItems: 'center',
@@ -169,6 +176,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
+    borderRadius: 15
   },
   text: {
     color: 'white',
@@ -192,15 +200,18 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: '25%',
     marginTop: 10,
+    borderColor: '#ccc',
     backgroundColor: '#fff',
+    borderRadius: 5,
     paddingLeft: 10,
   },
   btn: {
-    width: '70%',
+    width: '50%',
     height: '25%',
     backgroundColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 20,
     marginTop: 20,
   },
   btnText: {
