@@ -6,8 +6,8 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
   Alert,
+  Pressable,
 } from 'react-native';
 import React from 'react';
 import {useDispatch} from 'react-redux';
@@ -99,7 +99,7 @@ const Login = props => {
                 placeholder="Enter Password"
                 secureTextEntry={hidePassword}
               />
-              <TouchableOpacity
+              <Pressable
                 style={{width: 20, borderBottomWidth: 2, borderColor: 'grey'}}
                 onPress={() => setHidePassword(!hidePassword)}>
                 {hidePassword ? (
@@ -117,7 +117,7 @@ const Login = props => {
                     size={20}
                   />
                 )}
-              </TouchableOpacity>
+              </Pressable>
             </View>
             <TouchableOpacity style={styles.button} onPress={loginHandler}>
               {innerLoading ? (

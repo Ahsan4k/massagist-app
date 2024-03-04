@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Alert,
+  Pressable,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import {post} from '../networkcalls/requests';
@@ -117,7 +118,7 @@ const ChangePassword = props => {
                   placeholder="Enter Password"
                   secureTextEntry={hidePassword}
                 />
-                <TouchableOpacity
+                <Pressable
                   style={{width: 20, borderBottomWidth: 2, borderColor: 'grey'}}
                   onPress={() => setHidePassword(!hidePassword)}>
                   {hidePassword ? (
@@ -135,7 +136,7 @@ const ChangePassword = props => {
                       size={20}
                     />
                   )}
-                </TouchableOpacity>
+                </Pressable>
               </View>
               <Text style={styles.text}>Re-enter New Password</Text>
               <TextInput
