@@ -16,6 +16,8 @@ import {COLORS} from '../consts/colors';
 import {del, patch, post} from '../networkcalls/requests';
 import {login, logout, updateUser} from '../redux/authSlice';
 import InnerLoader from '../components/InnerLoader';
+import MaskInput, {Masks} from 'react-native-mask-input';
+import {phoneNumberRegex} from '../consts/baseUrl';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -46,27 +48,27 @@ const Profile = props => {
   };
 
   const updateNumber = async () => {
-    setInnerLoading(true)
-      try {
-        const res = await patch('auth/changeNumber', {
-          email: user.email,
-          number: phoneNumber,
-        });
-        if(res){
-          setInnerLoading(false)
-          setVisible(false);
-          dispatch(updateUser({phoneNumber: phoneNumber}));
-          Alert.alert('Message', 'Your phone number is updated successfully.', [
-            {text: 'Ok'},
-          ]);
-        }
-      } catch (error) {
-        console.log(error);
-        setInnerLoading(false)
+    setInnerLoading(true);
+    try {
+      const res = await patch('auth/changeNumber', {
+        email: user.email,
+        number: phoneNumber,
+      });
+      if (res) {
+        setInnerLoading(false);
         setVisible(false);
-        Alert.alert('Message', 'Sorry, there was some error', [{text: 'Ok'}]);
+        dispatch(updateUser({phoneNumber: phoneNumber}));
+        Alert.alert('Message', 'Your phone number is updated successfully.', [
+          {text: 'Ok'},
+        ]);
       }
+    } catch (error) {
+      console.log(error);
+      setInnerLoading(false);
+      setVisible(false);
+      Alert.alert('Message', 'Sorry, there was some error', [{text: 'Ok'}]);
     }
+  };
 
   return (
     <SafeAreaView style={styles.main}>
@@ -115,12 +117,11 @@ const Profile = props => {
               style={{width: 35, height: 35}}
             />
           </TouchableOpacity>
-          <TextInput
-            placeholder="Phone Number"
-            placeholderTextColor="#ccc"
+          <MaskInput
             onChangeText={phone => setPhoneNumber(phone)}
             value={phoneNumber}
             style={styles.input}
+            mask={Masks.USA_PHONE}
           />
           <TouchableOpacity onPress={updateNumber} style={styles.btn}>
             {innerLoading ? (
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
-    borderRadius: 15
+    borderRadius: 15,
   },
   text: {
     color: 'white',
