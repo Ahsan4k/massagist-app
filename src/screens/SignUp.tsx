@@ -10,10 +10,12 @@ import {
   KeyboardAvoidingView,
   Alert,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import {phoneNumberRegex} from '../consts/baseUrl';
 import {post} from '../networkcalls/requests';
 import InnerLoader from '../components/InnerLoader';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const {width, height} = Dimensions.get('window');
 
@@ -105,7 +107,7 @@ const SignUp = props => {
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
       <Text style={styles.head}>SignUp</Text>
       <View style={styles.inner}>
-        <KeyboardAvoidingView behavior="padding">
+        <KeyboardAwareScrollView>
           <Text style={styles.text}>First Name</Text>
           <TextInput
             style={styles.email}
@@ -154,14 +156,14 @@ const SignUp = props => {
             value={confirmPassword}
             placeholder="Re-enter Password"
           />
-        </KeyboardAvoidingView>
-        <TouchableOpacity style={styles.button} onPress={signUpHandler}>
-          {innerLoading ? (
-            <InnerLoader loading={innerLoading} />
-          ) : (
-            <Text style={styles.btnText}>SignUp</Text>
-          )}
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={signUpHandler}>
+            {innerLoading ? (
+              <InnerLoader loading={innerLoading} />
+            ) : (
+              <Text style={styles.btnText}>SignUp</Text>
+            )}
+          </TouchableOpacity>
+        </KeyboardAwareScrollView>
       </View>
       <View style={styles.dont}>
         <Text style={{color: 'white', fontFamily: 'SF-Pro-Text-Light'}}>

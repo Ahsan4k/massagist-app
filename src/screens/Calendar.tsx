@@ -40,6 +40,7 @@ const Book = props => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const user = useSelector((state: any) => state.auth.data);
+
   const booked = useSelector((state: any) => state.booking.bookings);
   const [savedBookings, setSavedBookings] = useState([]);
   const dispatch = useDispatch();
@@ -160,9 +161,9 @@ const Book = props => {
         price: duration.price,
         addons: addons,
       });
+      syncBookingsHandler();
       if (response?.data?.status === 'Success') {
         setInnerLoading(false);
-        syncBookingsHandler();
         Alert.alert('Success', 'Your appointment has been booked!', [
           {onPress: () => getBookings()},
         ]);

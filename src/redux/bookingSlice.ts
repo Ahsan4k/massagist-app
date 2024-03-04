@@ -3,7 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 const bookingSlice = createSlice({
   name: 'bookings',
   initialState: {
-    bookings: []
+    bookings: [],
   },
   reducers: {
     saveBookings: (state, action) => {

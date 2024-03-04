@@ -75,7 +75,7 @@ const BookingHistory = props => {
       </View>
       <FlatList
         style={styles.list}
-        data={data.reverse()}
+        data={data}
         keyExtractor={(item, index) => index}
         renderItem={({item, index}) =>
           item.type == 'Body Massage' ? (

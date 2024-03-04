@@ -9,13 +9,13 @@ const {width, height} = Dimensions.get('window');
 
 const Notifications = () => {
   const [savedBookings, setSavedBookings] = useState([]);
-  console.log("SAVED BOOKINGS ", savedBookings)
+  console.log('SAVED BOOKINGS ', savedBookings);
 
   useFocusEffect(
     useCallback(() => {
       const getBookings = async () => {
         const bookings = await AsyncStorage.getItem('tempBookings');
-        const parsed = bookings !== null ? JSON.parse(bookings) : null
+        const parsed = bookings !== null ? JSON.parse(bookings) : null;
         if (parsed) {
           setSavedBookings(parsed);
         }
@@ -23,8 +23,6 @@ const Notifications = () => {
       getBookings();
     }, []),
   );
-
-  
 
   if (savedBookings?.length === 0) {
     return (
@@ -37,19 +35,19 @@ const Notifications = () => {
   return (
     <SafeAreaView style={styles.main}>
       <FlatList
-      contentContainerStyle={{paddingBottom:60}}
-      data={savedBookings.reverse()}
-      renderItem={({item, index}) => (
-        <View style={styles.box} key={index}>
-        <View style={styles.point} />
-        <View style={styles.tab}>
-          <Text style={styles.msg}>
-            Your appointment has been booked for {item?.date} from{' '}
-            {item?.startTime} to {item?.endTime}
-          </Text>
-        </View>
-      </View>
-      )}
+        contentContainerStyle={{paddingBottom: 60}}
+        data={savedBookings.reverse()}
+        renderItem={({item, index}) => (
+          <View style={styles.box} key={index}>
+            <View style={styles.point} />
+            <View style={styles.tab}>
+              <Text style={styles.msg}>
+                Your appointment has been booked for {item?.date} from{' '}
+                {item?.startTime} to {item?.endTime}
+              </Text>
+            </View>
+          </View>
+        )}
       />
     </SafeAreaView>
   );
@@ -61,9 +59,9 @@ const styles = StyleSheet.create({
   main: {
     width: width,
     height: height,
+    backgroundColor: 'white',
   },
   tab: {
-    width: width / 1.1,
     borderWidth: 1,
     borderColor: 'red',
     padding: 10,
@@ -72,6 +70,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginLeft: 10,
     backgroundColor: 'white',
+    width: width / 1.1,
   },
   margin: {
     marginTop: 50,

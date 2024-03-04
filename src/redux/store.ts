@@ -21,7 +21,7 @@ const persistConfig = {
 
 const reducers = combineReducers({
   auth: AuthReducer,
-  booking: bookingReducer
+  booking: bookingReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

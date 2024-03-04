@@ -13,9 +13,9 @@ import React, {useEffect} from 'react';
 import {post} from '../networkcalls/requests';
 import {COLORS} from '../consts/colors';
 import InnerLoader from '../components/InnerLoader';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import BackButton from '../components/BackButton';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
@@ -24,10 +24,9 @@ const ChangePassword = props => {
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const dispatch = useDispatch();
   const [innerLoading, setInnerLoading] = useState(false);
   const user = useSelector((state: any) => state.auth.data);
-
-  console.log(email);
 
   const validator = () => {
     if (newPassword === '') {
@@ -91,7 +90,7 @@ const ChangePassword = props => {
       <View style={{marginHorizontal: 10}}>
         <BackButton onPress={() => props.navigation.goBack()} />
       </View>
-      <View style={{marginTop: width / 5, alignItems: 'center'}} >
+      <View style={{marginTop: width / 5, alignItems: 'center'}}>
         <Image
           source={require('../assets/loginIcon.png')}
           style={styles.logo}
