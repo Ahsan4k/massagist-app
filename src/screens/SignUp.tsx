@@ -7,10 +7,8 @@ import {
   Image,
   TextInput,
   Pressable,
-  KeyboardAvoidingView,
   Alert,
   TouchableOpacity,
-  Platform,
 } from 'react-native';
 import {phoneNumberRegex} from '../consts/baseUrl';
 import {post} from '../networkcalls/requests';
@@ -159,7 +157,7 @@ const SignUp = props => {
               placeholder="Enter Password"
               secureTextEntry={hidePassword}
             />
-            <TouchableOpacity
+            <Pressable
               style={{width: 20, borderBottomWidth: 2, borderColor: 'grey'}}
               onPress={() => setHidePassword(!hidePassword)}>
               {hidePassword ? (
@@ -177,7 +175,7 @@ const SignUp = props => {
                   size={20}
                 />
               )}
-            </TouchableOpacity>
+            </Pressable>
           </View>
           <Text style={styles.text}>Re-enter Password</Text>
           <TextInput
