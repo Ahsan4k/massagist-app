@@ -14,6 +14,7 @@ import {useDispatch} from 'react-redux';
 import {login} from '../redux/authSlice';
 import InnerLoader from '../components/InnerLoader';
 import {post} from '../networkcalls/requests';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const {width, height} = Dimensions.get('window');
 
@@ -65,58 +66,63 @@ const Login = props => {
   };
 
   return (
-    <View style={styles.view}>
-      <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
-      <Text style={styles.head}>Login</Text>
-      <View style={styles.inner}>
-        <KeyboardAvoidingView behavior="padding">
-          <Text style={styles.text}>Email</Text>
-          <TextInput
-            style={styles.email}
-            onChangeText={(email: string) => setEmail(email)}
-            value={email}
-            placeholder="Enter Email"
-          />
-          <Text style={styles.text}>Password</Text>
-          <TextInput
-            style={styles.email}
-            onChangeText={(pass: string) => setPassword(pass)}
-            value={password}
-            placeholder="Enter Password"
-          />
-        </KeyboardAvoidingView>
-        <TouchableOpacity style={styles.button} onPress={loginHandler}>
-          {innerLoading ? (
-            <InnerLoader loading={innerLoading} />
-          ) : (
-            <Text style={styles.btnText}>Login</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-      <View style={styles.dont}>
-        <Text style={{color: 'white', fontFamily: 'SF-Pro-Text-Light'}}>
-          Don't have an account?
-        </Text>
+    <KeyboardAwareScrollView>
+      <View style={styles.view}>
+        <Image
+          source={require('../assets/loginIcon.png')}
+          style={styles.logo}
+        />
+        <Text style={styles.head}>Login</Text>
+        <View style={styles.inner}>
+          <View>
+            <Text style={styles.text}>Email</Text>
+            <TextInput
+              style={styles.email}
+              onChangeText={(email: string) => setEmail(email)}
+              value={email}
+              placeholder="Enter Email"
+            />
+            <Text style={styles.text}>Password</Text>
+            <TextInput
+              style={styles.email}
+              onChangeText={(pass: string) => setPassword(pass)}
+              value={password}
+              placeholder="Enter Password"
+            />
+            <TouchableOpacity style={styles.button} onPress={loginHandler}>
+              {innerLoading ? (
+                <InnerLoader loading={innerLoading} />
+              ) : (
+                <Text style={styles.btnText}>Login</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.dont}>
+          <Text style={{color: 'white', fontFamily: 'SF-Pro-Text-Light'}}>
+            Don't have an account?
+          </Text>
+          <Text
+            style={{
+              color: 'white',
+              fontFamily: 'SF-Pro-Text-Light',
+              textDecorationLine: 'underline',
+            }}
+            onPress={() => props.navigation.navigate('SignUp')}>
+            SignUp
+          </Text>
+        </View>
         <Text
           style={{
+            marginTop: 20,
             color: 'white',
             fontFamily: 'SF-Pro-Text-Light',
-            textDecorationLine: 'underline',
           }}
-          onPress={() => props.navigation.navigate('SignUp')}>
-          SignUp
+          onPress={() => props.navigation.navigate('ForgotPassword')}>
+          Forgot Password?
         </Text>
       </View>
-      <Text
-        style={{
-          marginTop: 20,
-          color: 'white',
-          fontFamily: 'SF-Pro-Text-Light',
-        }}
-        onPress={() => props.navigation.navigate('ForgotPassword')}>
-        Forgot Password?
-      </Text>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -137,7 +143,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
     // alignItems: 'center',
-    paddingTop: 20,
+    paddingTop: 30,
   },
   head: {
     fontSize: 25,
