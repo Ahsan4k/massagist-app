@@ -28,7 +28,7 @@ const Book = props => {
   const type = props.route.params.value.type;
   const duration = props.route.params?.selectedValue;
   const addons = props.route.params?.checkBoxValue;
-  console.log("check", addons)
+  console.log('check', addons);
   const [selectedDay, setSelectedDay] = useState({
     dateString: moment(new Date()).format('YYYY-MM-DD'),
   });
@@ -40,9 +40,8 @@ const Book = props => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const user = useSelector((state: any) => state.auth.data);
-  const booked = useSelector((state: any) => state.booking.bookings);
-  const [savedBookings, setSavedBookings] = useState([]);
-  const dispatch = useDispatch();
+
+  console.log(timeSlots);
 
   const createTimeSlots = (fromTime: any, toTime: any, duration: string) => {
     let startTime = moment(fromTime, 'hh:mm A');
@@ -85,30 +84,28 @@ const Book = props => {
     getBookings();
   }, [selectedDay]);
 
-
   const syncBookingsHandler = async () => {
     let copy = [...savedBookings];
-    let merged = [...copy , {
-      type,
-      startTime,
-      endTime,
-      date: selectedDay.dateString,
-      duration: duration.time,
-      count: 1,
-      token: user?.data?.token,
-      email: user?.data?.email,
-      hands: duration.hands,
-      price: duration.price,
-      addons: addons
-    }]
-    await AsyncStorage.setItem('tempBookings', JSON.stringify(merged))
-  }
+    let merged = [
+      ...copy,
+      {
+        type,
+        startTime,
+        endTime,
+        date: selectedDay.dateString,
+        duration: duration.time,
+        count: 1,
+        token: user?.data?.token,
+        email: user?.data?.email,
+        hands: duration.hands,
+        price: duration.price,
+        addons: addons,
+      },
+    ];
+    await AsyncStorage.setItem('tempBookings', JSON.stringify(merged));
+  };
 
   const bookAppointmentHandler = async () => {
-    syncBookingsHandler();
-    if(selectedTime === ''){
-      return Alert.alert('Info', 'Please select any timeslot.')
-    }
     setInnerLoading(true);
     try {
       const response = await post('book/bookDate', {
@@ -116,17 +113,16 @@ const Book = props => {
         startTime,
         endTime,
         date: selectedDay.dateString,
-        duration: duration.time,
+        duration: duration,
         count: 1,
         token: user?.token,
         email: user?.email,
         hands: duration.hands,
         price: duration.price,
-        addons: addons
+        addons: addons,
       });
       if (response?.data?.status === 'Success') {
         setInnerLoading(false);
-        syncBookingsHandler();
         Alert.alert('Success', 'Your appointment has been booked!', [
           {onPress: () => getBookings()},
         ]);
@@ -143,18 +139,6 @@ const Book = props => {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    const getSyncedBookings = async () => {
-      const saved = await AsyncStorage.getItem('tempBookings');
-      const parsed = saved !== null ? JSON.parse(saved) : null
-      if(saved){
-        setSavedBookings(parsed)
-      }
-    }
-    getSyncedBookings();
-  },[])
-
 
   if (loading) {
     return (
@@ -191,7 +175,7 @@ const Book = props => {
   return (
     <SafeAreaView
       style={{width: width, height: height, backgroundColor: '#fff'}}>
-         <View style={{marginHorizontal: 10, marginBottom: 10}}>
+      <View style={{marginHorizontal: 10, marginBottom: 10}}>
         <BackButton onPress={() => props.navigation.goBack()} />
       </View>
       <Calendar
