@@ -13,14 +13,7 @@ import React, {useEffect} from 'react';
 import {post} from '../networkcalls/requests';
 import {COLORS} from '../consts/colors';
 import InnerLoader from '../components/InnerLoader';
-import {useSelector} from 'react-redux';
-import BackButton from '../components/BackButton';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import React, {useEffect} from 'react';
-import {post} from '../networkcalls/requests';
-import {COLORS} from '../consts/colors';
-import InnerLoader from '../components/InnerLoader';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import BackButton from '../components/BackButton';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
