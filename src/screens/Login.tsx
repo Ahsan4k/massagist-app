@@ -15,6 +15,7 @@ import {login} from '../redux/authSlice';
 import InnerLoader from '../components/InnerLoader';
 import {post} from '../networkcalls/requests';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const {width, height} = Dimensions.get('window');
 
@@ -23,6 +24,7 @@ const Login = props => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [innerLoading, setInnerLoading] = useState(false);
+  const [hidePassword, setHidePassword] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -83,12 +85,40 @@ const Login = props => {
               placeholder="Enter Email"
             />
             <Text style={styles.text}>Password</Text>
-            <TextInput
-              style={styles.email}
-              onChangeText={(pass: string) => setPassword(pass)}
-              value={password}
-              placeholder="Enter Password"
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: width * 0.83,
+              }}>
+              <TextInput
+                style={styles.password}
+                onChangeText={(pass: string) => setPassword(pass)}
+                value={password}
+                placeholder="Enter Password"
+                secureTextEntry={hidePassword}
+              />
+              <TouchableOpacity
+                style={{width: 20, borderBottomWidth: 2, borderColor: 'grey'}}
+                onPress={() => setHidePassword(!hidePassword)}>
+                {hidePassword ? (
+                  <Entypo
+                    style={{paddingBottom: 46}}
+                    name="eye-with-line"
+                    color="maroon"
+                    size={20}
+                  />
+                ) : (
+                  <Entypo
+                    style={{paddingBottom: 46}}
+                    name="eye"
+                    color="maroon"
+                    size={20}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
             <TouchableOpacity style={styles.button} onPress={loginHandler}>
               {innerLoading ? (
                 <InnerLoader loading={innerLoading} />
@@ -188,5 +218,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: width * 0.58,
+  },
+  password: {
+    width: width * 0.81,
+    height: height * 0.08,
+    borderBottomWidth: 2,
+    borderColor: 'grey',
+    left: 10,
   },
 });
