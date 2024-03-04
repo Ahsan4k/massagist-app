@@ -1,5 +1,6 @@
 import {configureStore, combineReducers} from '@reduxjs/toolkit';
 import AuthReducer from './authSlice';
+import bookingReducer from './bookingSlice';
 import {
   persistReducer,
   persistStore,
@@ -14,11 +15,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const persistConfig = {
   key: 'root',
-  storage: AsyncStorage
+  storage: AsyncStorage,
+  blacklist: 'bookings',
 };
 
 const reducers = combineReducers({
   auth: AuthReducer,
+  booking: bookingReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);
