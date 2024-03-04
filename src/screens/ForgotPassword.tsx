@@ -14,6 +14,7 @@ import {post} from '../networkcalls/requests';
 import InnerLoader from '../components/InnerLoader';
 import BackButton from '../components/BackButton';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const {width, height} = Dimensions.get('window');
 
@@ -57,37 +58,39 @@ const ForgotPassword = props => {
   };
 
   return (
-    <SafeAreaView style={styles.view}>
-      <View style={{marginHorizontal: 10}}>
-        <BackButton onPress={() => props.navigation.goBack()} />
-      </View>
-      <View style={{marginTop: width / 4, alignItems: 'center'}}>
-        <Image
-          source={require('../assets/loginIcon.png')}
-          style={styles.logo}
-        />
-        <Text style={styles.head}>OTP</Text>
-        <View style={styles.inner}>
-          <KeyboardAvoidingView behavior="padding">
-            <Text style={styles.text}>Email</Text>
-            <TextInput
-              style={styles.email}
-              onChangeText={(email: string) => setEmail(email)}
-              value={email}
-              placeholder="Enter Email"
-            />
-          </KeyboardAvoidingView>
-
-          <TouchableOpacity style={styles.button} onPress={otpRequestHandler}>
-            {innerLoading ? (
-              <InnerLoader loading={innerLoading} />
-            ) : (
-              <Text style={styles.btnText}>Request OTP</Text>
-            )}
-          </TouchableOpacity>
+    <KeyboardAwareScrollView>
+      <SafeAreaView style={styles.view}>
+        <View style={{marginHorizontal: 10}}>
+          <BackButton onPress={() => props.navigation.goBack()} />
         </View>
-      </View>
-    </SafeAreaView>
+        <View style={{marginTop: width / 4, alignItems: 'center'}}>
+          <Image
+            source={require('../assets/loginIcon.png')}
+            style={styles.logo}
+          />
+          <Text style={styles.head}>OTP</Text>
+          <View style={styles.inner}>
+            <KeyboardAvoidingView behavior="padding">
+              <Text style={styles.text}>Email</Text>
+              <TextInput
+                style={styles.email}
+                onChangeText={(email: string) => setEmail(email)}
+                value={email}
+                placeholder="Enter Email"
+              />
+            </KeyboardAvoidingView>
+
+            <TouchableOpacity style={styles.button} onPress={otpRequestHandler}>
+              {innerLoading ? (
+                <InnerLoader loading={innerLoading} />
+              ) : (
+                <Text style={styles.btnText}>Request OTP</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
+    </KeyboardAwareScrollView>
   );
 };
 

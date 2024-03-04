@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Alert,
+  Pressable,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import {post} from '../networkcalls/requests';
@@ -16,6 +17,8 @@ import InnerLoader from '../components/InnerLoader';
 import {useSelector, useDispatch} from 'react-redux';
 import BackButton from '../components/BackButton';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const {width, height} = Dimensions.get('window');
 
@@ -26,6 +29,7 @@ const ChangePassword = props => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const dispatch = useDispatch();
   const [innerLoading, setInnerLoading] = useState(false);
+  const [hidePassword, setHidePassword] = useState(true);
   const user = useSelector((state: any) => state.auth.data);
 
   const validator = () => {
@@ -86,45 +90,76 @@ const ChangePassword = props => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.view}>
-      <View style={{marginHorizontal: 10}}>
-        <BackButton onPress={() => props.navigation.goBack()} />
-      </View>
-      <View style={{marginTop: width / 5, alignItems: 'center'}}>
-        <Image
-          source={require('../assets/loginIcon.png')}
-          style={styles.logo}
-        />
-        <Text style={styles.head}>Password Change</Text>
-        <View style={styles.inner}>
-          <KeyboardAvoidingView behavior="padding">
-            <Text style={styles.text}>New Password</Text>
-            <TextInput
-              style={styles.email}
-              onChangeText={(pass: string) => setNewPassword(pass)}
-              value={newPassword}
-              placeholder="Enter New Password"
-            />
-            <Text style={styles.text}>Re-enter New Password</Text>
-            <TextInput
-              style={styles.email}
-              onChangeText={(pass: string) => setConfirmPassword(pass)}
-              value={confirmPassword}
-              placeholder="Enter New Password"
-            />
-          </KeyboardAvoidingView>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={changePasswordHandler}>
-            {innerLoading ? (
-              <InnerLoader loading={innerLoading} />
-            ) : (
-              <Text style={styles.btnText}>Change</Text>
-            )}
-          </TouchableOpacity>
+    <KeyboardAwareScrollView>
+      <SafeAreaView style={styles.view}>
+        <View style={{marginHorizontal: 10}}>
+          <BackButton onPress={() => props.navigation.goBack()} />
         </View>
-      </View>
-    </SafeAreaView>
+        <View style={{marginTop: width / 5, alignItems: 'center'}}>
+          <Image
+            source={require('../assets/loginIcon.png')}
+            style={styles.logo}
+          />
+          <Text style={styles.head}>Password Change</Text>
+          <View style={styles.inner}>
+            <KeyboardAvoidingView behavior="padding">
+              <Text style={styles.text}>New Password</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: width * 0.83,
+                }}>
+                <TextInput
+                  style={styles.password}
+                  onChangeText={(pass: string) => setNewPassword(pass)}
+                  value={newPassword}
+                  placeholder="Enter Password"
+                  secureTextEntry={hidePassword}
+                />
+                <Pressable
+                  style={{width: 20, borderBottomWidth: 2, borderColor: 'grey'}}
+                  onPress={() => setHidePassword(!hidePassword)}>
+                  {hidePassword ? (
+                    <Entypo
+                      style={{paddingBottom: 45.5}}
+                      name="eye-with-line"
+                      color="maroon"
+                      size={20}
+                    />
+                  ) : (
+                    <Entypo
+                      style={{paddingBottom: 45.5}}
+                      name="eye"
+                      color="maroon"
+                      size={20}
+                    />
+                  )}
+                </Pressable>
+              </View>
+              <Text style={styles.text}>Re-enter New Password</Text>
+              <TextInput
+                style={styles.email}
+                onChangeText={(pass: string) => setConfirmPassword(pass)}
+                value={confirmPassword}
+                placeholder="Enter New Password"
+                secureTextEntry={hidePassword}
+              />
+            </KeyboardAvoidingView>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={changePasswordHandler}>
+              {innerLoading ? (
+                <InnerLoader loading={innerLoading} />
+              ) : (
+                <Text style={styles.btnText}>Change</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -132,7 +167,8 @@ export default ChangePassword;
 
 const styles = StyleSheet.create({
   view: {
-    flex: 1,
+    width: width,
+    height: height,
     backgroundColor: '#AE1F31',
   },
   inner: {
@@ -185,5 +221,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: width * 0.58,
+  },
+  password: {
+    width: width * 0.81,
+    height: height * 0.08,
+    borderBottomWidth: 2,
+    borderColor: 'grey',
+    left: 10,
   },
 });

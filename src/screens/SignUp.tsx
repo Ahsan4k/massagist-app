@@ -7,15 +7,15 @@ import {
   Image,
   TextInput,
   Pressable,
-  KeyboardAvoidingView,
   Alert,
   TouchableOpacity,
-  Platform,
 } from 'react-native';
 import {phoneNumberRegex} from '../consts/baseUrl';
 import {post} from '../networkcalls/requests';
 import InnerLoader from '../components/InnerLoader';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import MaskInput, {Masks} from 'react-native-mask-input';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const {width, height} = Dimensions.get('window');
 
@@ -28,6 +28,7 @@ const SignUp = props => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [innerLoading, setInnerLoading] = useState(false);
+  const [hidePassword, setHidePassword] = useState(true);
 
   const validator = () => {
     if (
@@ -107,7 +108,7 @@ const SignUp = props => {
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
       <Text style={styles.head}>SignUp</Text>
       <View style={styles.inner}>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView extraHeight={-64}>
           <Text style={styles.text}>First Name</Text>
           <TextInput
             style={styles.email}
@@ -130,31 +131,59 @@ const SignUp = props => {
             placeholder="Enter Email"
           />
           <Text style={styles.text}>Phone number</Text>
-          <TextInput
+          <MaskInput
             style={styles.email}
-            onChangeText={(phone: string) =>
-              phoneNumberRegex.test(phone) || phone == ''
-                ? setPhoneNumber(phone)
-                : null
+            onChangeText={
+              (phone: string) =>
+                // phoneNumberRegex.test(phone) || phone == ''
+                setPhoneNumber(phone)
+              // : null
             }
             value={phoneNumber}
-            placeholder="Enter Phone number (10 digits max)"
-            maxLength={10}
-            keyboardType="numeric"
+            mask={Masks.USA_PHONE}
           />
           <Text style={styles.text}>Password</Text>
-          <TextInput
-            style={styles.email}
-            onChangeText={(pass: string) => setPassword(pass)}
-            value={password}
-            placeholder="Enter Password"
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: width * 0.83,
+            }}>
+            <TextInput
+              style={styles.password}
+              onChangeText={(pass: string) => setPassword(pass)}
+              value={password}
+              placeholder="Enter Password"
+              secureTextEntry={hidePassword}
+            />
+            <Pressable
+              style={{width: 20, borderBottomWidth: 2, borderColor: 'grey'}}
+              onPress={() => setHidePassword(!hidePassword)}>
+              {hidePassword ? (
+                <Entypo
+                  style={{paddingBottom: 45}}
+                  name="eye-with-line"
+                  color="maroon"
+                  size={20}
+                />
+              ) : (
+                <Entypo
+                  style={{paddingBottom: 45}}
+                  name="eye"
+                  color="maroon"
+                  size={20}
+                />
+              )}
+            </Pressable>
+          </View>
           <Text style={styles.text}>Re-enter Password</Text>
           <TextInput
             style={styles.email}
             onChangeText={(pass: string) => setConfirmPassword(pass)}
             value={confirmPassword}
             placeholder="Re-enter Password"
+            secureTextEntry={hidePassword}
           />
           <TouchableOpacity style={styles.button} onPress={signUpHandler}>
             {innerLoading ? (
@@ -245,5 +274,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: width * 0.58,
+  },
+  password: {
+    width: width * 0.81,
+    height: height * 0.08,
+    borderBottomWidth: 2,
+    borderColor: 'grey',
+    left: 10,
   },
 });
