@@ -16,14 +16,10 @@ import {post, get} from '../networkcalls/requests';
 import axios from 'axios';
 import {COLORS} from '../consts/colors';
 import InnerLoader from '../components/InnerLoader';
-<<<<<<< HEAD
 import {useDispatch, useSelector} from 'react-redux';
 import {saveBookings} from '../redux/bookingSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackButton from '../components/BackButton';
-=======
-import {useSelector} from 'react-redux';
->>>>>>> parent of ca34811 (Added phone number update (#16))
 
 const {width, height} = Dimensions.get('window');
 
@@ -32,7 +28,7 @@ const Book = props => {
   const type = props.route.params.value.type;
   const duration = props.route.params?.selectedValue;
   const addons = props.route.params?.checkBoxValue;
-  console.log("check", addons)
+  console.log('check', addons);
   const [selectedDay, setSelectedDay] = useState({
     dateString: moment(new Date()).format('YYYY-MM-DD'),
   });
@@ -88,6 +84,27 @@ const Book = props => {
     getBookings();
   }, [selectedDay]);
 
+  const syncBookingsHandler = async () => {
+    let copy = [...savedBookings];
+    let merged = [
+      ...copy,
+      {
+        type,
+        startTime,
+        endTime,
+        date: selectedDay.dateString,
+        duration: duration.time,
+        count: 1,
+        token: user?.data?.token,
+        email: user?.data?.email,
+        hands: duration.hands,
+        price: duration.price,
+        addons: addons,
+      },
+    ];
+    await AsyncStorage.setItem('tempBookings', JSON.stringify(merged));
+  };
+
   const bookAppointmentHandler = async () => {
     setInnerLoading(true);
     try {
@@ -98,7 +115,11 @@ const Book = props => {
         date: selectedDay.dateString,
         duration: duration,
         count: 1,
-        token: user?.data?.token,
+        token: user?.token,
+        email: user?.email,
+        hands: duration.hands,
+        price: duration.price,
+        addons: addons,
       });
       if (response?.data?.status === 'Success') {
         setInnerLoading(false);
@@ -106,8 +127,12 @@ const Book = props => {
           {onPress: () => getBookings()},
         ]);
       } else if (response?.data?.status === 'Failed') {
-        setInnerLoading(false)
-        Alert.alert('Failed', "You or someone has already booked this slot for today", [{onPress: () => {}}]);
+        setInnerLoading(false);
+        Alert.alert(
+          'Failed',
+          'You or someone has already booked this slot for today',
+          [{onPress: () => {}}],
+        );
       }
     } catch (error) {
       setInnerLoading(false);
@@ -137,7 +162,8 @@ const Book = props => {
         (items: any) =>
           items.startTime === startTime &&
           items.endTime === endTime &&
-          items.count === (duration?.hands === '4' && items.count !== 2 ? 1 : 2)
+          items.count ===
+            (duration?.hands === '4' && items.count !== 2 ? 1 : 2),
       )
     ) {
       return true;
@@ -149,7 +175,7 @@ const Book = props => {
   return (
     <SafeAreaView
       style={{width: width, height: height, backgroundColor: '#fff'}}>
-         <View style={{marginHorizontal: 10, marginBottom: 10}}>
+      <View style={{marginHorizontal: 10, marginBottom: 10}}>
         <BackButton onPress={() => props.navigation.goBack()} />
       </View>
       <Calendar

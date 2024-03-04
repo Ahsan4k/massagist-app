@@ -9,22 +9,20 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
-<<<<<<< HEAD
 import React, {useEffect} from 'react';
 import {post} from '../networkcalls/requests';
 import {COLORS} from '../consts/colors';
 import InnerLoader from '../components/InnerLoader';
 import {useSelector} from 'react-redux';
 import BackButton from '../components/BackButton';
-import { SafeAreaView } from 'react-native-safe-area-context';
-=======
-import React from 'react';
-import {useDispatch} from 'react-redux';
-import {login} from '../redux/authSlice';
-import { post } from '../networkcalls/requests';
-import { COLORS } from '../consts/colors';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import React, {useEffect} from 'react';
+import {post} from '../networkcalls/requests';
+import {COLORS} from '../consts/colors';
 import InnerLoader from '../components/InnerLoader';
->>>>>>> parent of ca34811 (Added phone number update (#16))
+import {useSelector} from 'react-redux';
+import BackButton from '../components/BackButton';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
@@ -35,12 +33,9 @@ const ChangePassword = props => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const dispatch = useDispatch();
   const [innerLoading, setInnerLoading] = useState(false);
-<<<<<<< HEAD
   const user = useSelector((state: any) => state.auth.data);
 
   console.log(email);
-=======
->>>>>>> parent of ca34811 (Added phone number update (#16))
 
   const validator = () => {
     if (newPassword === '') {
@@ -63,14 +58,22 @@ const ChangePassword = props => {
       setInnerLoading(true);
       try {
         const response = await post('auth/forgotpassword', {
-         email: props.route.params.email,
-         password: newPassword
+          email: email,
+          password: newPassword,
         });
         console.log(response?.data);
         if (response?.data?.success) {
           setInnerLoading(false);
           Alert.alert('Success', response?.data?.message, [
-            {onPress: () => props.navigation.navigate('Login')},
+            {
+              onPress: () => {
+                if (props.route.params?.email) {
+                  props.navigation.navigate('Login');
+                } else {
+                  props.navigation.goBack();
+                }
+              },
+            },
           ]);
         } else {
           setInnerLoading(false);
@@ -82,12 +85,21 @@ const ChangePassword = props => {
       }
     }
   };
+
+  useEffect(() => {
+    if (props.route.params?.email) {
+      setEmail(props.route.params?.email);
+    } else {
+      setEmail(user?.email);
+    }
+  }, []);
+
   return (
     <SafeAreaView style={styles.view}>
       <View style={{marginHorizontal: 10}}>
         <BackButton onPress={() => props.navigation.goBack()} />
       </View>
-      <View style={{marginTop: width / 5, alignItems: 'center'}} >
+      <View style={{marginTop: width / 5, alignItems: 'center'}}>
         <Image
           source={require('../assets/loginIcon.png')}
           style={styles.logo}
