@@ -107,7 +107,7 @@ const SignUp = props => {
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
       <Text style={styles.head}>SignUp</Text>
       <View style={styles.inner}>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView extraHeight={-64}>
           <Text style={styles.text}>First Name</Text>
           <TextInput
             style={styles.email}
