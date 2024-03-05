@@ -162,14 +162,14 @@ const SignUp = props => {
               onPress={() => setHidePassword(!hidePassword)}>
               {hidePassword ? (
                 <Entypo
-                  style={{paddingBottom: 45}}
+                  style={{paddingBottom: 45, top: 30}}
                   name="eye-with-line"
                   color="maroon"
                   size={20}
                 />
               ) : (
                 <Entypo
-                  style={{paddingBottom: 45}}
+                  style={{paddingBottom: 45, top: 30}}
                   name="eye"
                   color="maroon"
                   size={20}

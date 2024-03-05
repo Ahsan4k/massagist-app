@@ -89,7 +89,7 @@ const Login = props => {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                alignItems: 'center',
+                alignItems: 'flex-end',
                 width: width * 0.83,
               }}>
               <TextInput
@@ -104,14 +104,14 @@ const Login = props => {
                 onPress={() => setHidePassword(!hidePassword)}>
                 {hidePassword ? (
                   <Entypo
-                    style={{paddingBottom: 46}}
+                    style={{paddingBottom: 46, top: 30}}
                     name="eye-with-line"
                     color="maroon"
                     size={20}
                   />
                 ) : (
                   <Entypo
-                    style={{paddingBottom: 46}}
+                    style={{paddingBottom: 46, top: 30}}
                     name="eye"
                     color="maroon"
                     size={20}
