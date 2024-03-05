@@ -58,11 +58,12 @@ const ForgotPassword = props => {
   };
 
   return (
-    <KeyboardAwareScrollView>
       <SafeAreaView style={styles.view}>
+          
         <View style={{marginHorizontal: 10}}>
           <BackButton onPress={() => props.navigation.goBack()} />
         </View>
+        <KeyboardAwareScrollView >
         <View style={{marginTop: width / 4, alignItems: 'center'}}>
           <Image
             source={require('../assets/loginIcon.png')}
@@ -89,8 +90,9 @@ const ForgotPassword = props => {
             </TouchableOpacity>
           </View>
         </View>
+        </KeyboardAwareScrollView>
       </SafeAreaView>
-    </KeyboardAwareScrollView>
+  
   );
 };
 

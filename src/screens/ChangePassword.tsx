@@ -90,11 +90,11 @@ const ChangePassword = props => {
   }, []);
 
   return (
-    <KeyboardAwareScrollView>
-      <SafeAreaView style={styles.view}>
-        <View style={{marginHorizontal: 10}}>
-          <BackButton onPress={() => props.navigation.goBack()} />
-        </View>
+    <SafeAreaView style={styles.view}>
+      <View style={{marginHorizontal: 10}}>
+        <BackButton onPress={() => props.navigation.goBack()} />
+      </View>
+      <KeyboardAwareScrollView>
         <View style={{marginTop: width / 5, alignItems: 'center'}}>
           <Image
             source={require('../assets/loginIcon.png')}
@@ -102,51 +102,42 @@ const ChangePassword = props => {
           />
           <Text style={styles.head}>Password Change</Text>
           <View style={styles.inner}>
-            <KeyboardAvoidingView behavior="padding">
-              <Text style={styles.text}>New Password</Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  width: width * 0.83,
-                }}>
-                <TextInput
-                  style={styles.password}
-                  onChangeText={(pass: string) => setNewPassword(pass)}
-                  value={newPassword}
-                  placeholder="Enter Password"
-                  secureTextEntry={hidePassword}
-                />
-                <Pressable
-                  style={{width: 20, borderBottomWidth: 2, borderColor: 'grey'}}
-                  onPress={() => setHidePassword(!hidePassword)}>
-                  {hidePassword ? (
-                    <Entypo
-                      style={{paddingBottom: 45.5}}
-                      name="eye-with-line"
-                      color="maroon"
-                      size={20}
-                    />
-                  ) : (
-                    <Entypo
-                      style={{paddingBottom: 45.5}}
-                      name="eye"
-                      color="maroon"
-                      size={20}
-                    />
-                  )}
-                </Pressable>
-              </View>
-              <Text style={styles.text}>Re-enter New Password</Text>
+            <Text style={styles.text}>New Password</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: width * 0.83,
+              }}>
               <TextInput
-                style={styles.email}
-                onChangeText={(pass: string) => setConfirmPassword(pass)}
-                value={confirmPassword}
-                placeholder="Enter New Password"
+                style={styles.password}
+                onChangeText={(pass: string) => setNewPassword(pass)}
+                value={newPassword}
+                placeholder="Enter Password"
                 secureTextEntry={hidePassword}
               />
-            </KeyboardAvoidingView>
+              <Pressable
+                onPress={() => setHidePassword(!hidePassword)}>
+                {hidePassword ? (
+                  <View style={{width: 100, marginLeft:-20}}>
+                    <Entypo name="eye-with-line" color="maroon" size={20} />
+                  </View>
+                ) : (
+                  <View style={{width: 100, marginLeft:-20}}>
+                    <Entypo name="eye" color="maroon" size={20} />
+                  </View>
+                )}
+              </Pressable>
+            </View>
+            <Text style={styles.text}>Re-enter New Password</Text>
+            <TextInput
+              style={styles.email}
+              onChangeText={(pass: string) => setConfirmPassword(pass)}
+              value={confirmPassword}
+              placeholder="Enter New Password"
+              secureTextEntry={hidePassword}
+            />
             <TouchableOpacity
               style={styles.button}
               onPress={changePasswordHandler}>
@@ -158,8 +149,8 @@ const ChangePassword = props => {
             </TouchableOpacity>
           </View>
         </View>
-      </SafeAreaView>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 
