@@ -28,11 +28,11 @@ const Book = props => {
   const type = props.route.params.value.type;
   const duration = props.route.params?.selectedValue;
   const addons = props.route.params?.checkBoxValue;
-  console.log('check', addons);
   const [selectedDay, setSelectedDay] = useState({
     dateString: moment(new Date()).format('YYYY-MM-DD'),
   });
   const [timeSlots, setTimeSlots] = useState<any>([]);
+  const [compareSlots, setCompareSlots] = useState<any>([]);
   const [selectedTime, setSelectedTime] = useState('');
   const [bookings, setBookings] = useState([]);
   const [loading, isLoading] = useState(false);
@@ -45,27 +45,60 @@ const Book = props => {
   const [savedBookings, setSavedBookings] = useState([]);
   const dispatch = useDispatch();
 
-  const createTimeSlots = (fromTime: any, toTime: any, duration: string) => {
+  console.log('09:30 AM'.slice(0, 2) + ':30' + ' ' + '09:30 AM'.slice(6, 8));
+
+  const createTimeSlots = (
+    fromTime: any,
+    toTime: any,
+    duration: string,
+    compare: boolean,
+  ) => {
     let startTime = moment(fromTime, 'hh:mm A');
     let endTime = moment(toTime, 'hh:mm A');
+
+    console.log({
+      fromTime,
+      toTime,
+    });
     if (endTime.isBefore(startTime)) {
       endTime.add(1, 'day');
     }
-    let arr = [];
+    let arr = [] as any;
     while (startTime <= endTime) {
       arr.push(new moment(startTime).format('hh:mm A'));
       startTime.add(duration.slice(0, 3), 'minutes');
     }
-    setTimeSlots(arr);
+    if (compare) {
+      setCompareSlots((prev: any) => [...prev, ...arr]);
+    } else {
+      setTimeSlots(arr);
+    }
   };
 
   useEffect(() => {
-    createTimeSlots('09:00 AM', '09:00 PM', duration?.time);
+    createTimeSlots('09:00 AM', '09:30 PM', duration?.time);
   }, []);
 
   const onDayPress = (selectDay: any) => {
     console.log(selectDay);
     setSelectedDay(selectDay);
+  };
+
+  const calculateTimeslots = (data: any) => {
+    let formedTimeslots = [] as any;
+    data.forEach((e: any) => {
+      if (e.duration !== duration?.time)
+        formedTimeslots.push({
+          startTime: e.startTime,
+          endTime: e.endTime,
+          duration: e.duration,
+        });
+    });
+    formedTimeslots.forEach((e: any) => {
+      if (e.duration !== '30 minutes') {
+        createTimeSlots(e.startTime, e.endTime, duration?.time, true);
+      }
+    });
   };
 
   const getBookings = async () => {
@@ -75,7 +108,8 @@ const Book = props => {
         date: selectedDay?.dateString,
       });
       setBookings(response.data.data);
-      console.log('resp=========>', response.data.data);
+      calculateTimeslots(response.data.data);
+      // console.log('resp=========>', response.data.data);
     } catch (error) {
       console.log('geterror=========>', error);
     }
@@ -147,6 +181,8 @@ const Book = props => {
     }
   };
 
+  console.log('COMPARE SLOTS', compareSlots);
+
   useEffect(() => {
     const getSyncedBookings = async () => {
       const saved = await AsyncStorage.getItem('tempBookings');
@@ -182,6 +218,10 @@ const Book = props => {
           items.endTime === endTime &&
           items.count ===
             (duration?.hands === '4' && items.count !== 2 ? 1 : 2),
+      ) ||
+      compareSlots.some(
+        (items: any, index: any) =>
+          items === startTime && compareSlots[index + 1] === endTime,
       )
     ) {
       return true;
@@ -230,9 +270,24 @@ const Book = props => {
                 bookedColorHandler(item, timeSlots[index + 1]) ? true : false
               }
               onPress={() => {
-                setStartTime(item);
-                setEndTime(timeSlots[index + 1]);
-                setSelectedTime(`${item} - ${timeSlots[index + 1]}`);
+                if (
+                  duration.time === '90 minutes' &&
+                  compareSlots.some(
+                    (comp: any, index: any) => compareSlots[index + 1] === item,
+                  )
+                ) {
+                  setStartTime(
+                    moment(item, 'hh:mm A')
+                      .add(30, 'minutes')
+                      .format('hh:mm A'),
+                  );
+                  setEndTime(timeSlots[index + 1]);
+                  setSelectedTime(`${item} - ${timeSlots[index + 1]}`);
+                } else {
+                  setStartTime(item);
+                  setEndTime(timeSlots[index + 1]);
+                  setSelectedTime(`${item} - ${timeSlots[index + 1]}`);
+                }
               }}
               style={[
                 styles.timeslot,
@@ -258,10 +313,25 @@ const Book = props => {
                       ? '#fff'
                       : COLORS.primary,
                 }}>
-                {' '}
                 {item}
                 {timeSlots[index + 1] ? ' - ' + timeSlots[index + 1] : ''}
               </Text>
+              {duration.time === '90 minutes' &&
+              compareSlots.some(
+                (comp: any, index: any) => compareSlots[index + 1] === item,
+              ) ? (
+                <Text style={{fontSize: 10, color: 'blue'}}>
+                  {item === item.slice(0, 2) + ':30' + ' ' + item.slice(6, 8)
+                    ? moment(item, 'hh:mm A')
+                        .add(30, 'minutes')
+                        .format('hh:mm A')
+                    : item} -  {timeSlots[index+1] === timeSlots[index+1].slice(0, 2) + ':30' + ' ' + timeSlots[index+1].slice(6, 8)
+                    ? moment(timeSlots[index+1], 'hh:mm A')
+                        .add(30, 'minutes')
+                        .format('hh:mm A')
+                    : timeSlots[index+1]}
+                </Text>
+              ) : null}
             </TouchableOpacity>
           );
         }}
@@ -293,7 +363,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   book: {
-    marginTop: 50,
+    marginTop: 20,
     alignSelf: 'center',
     backgroundColor: COLORS.primary,
     width: width * 0.9,
