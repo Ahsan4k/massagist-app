@@ -89,7 +89,7 @@ const Login = props => {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                alignItems: 'center',
+                alignItems: 'flex-end',
                 width: width * 0.83,
               }}>
               <TextInput
