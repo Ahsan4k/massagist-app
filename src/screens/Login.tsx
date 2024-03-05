@@ -99,23 +99,16 @@ const Login = props => {
                 placeholder="Enter Password"
                 secureTextEntry={hidePassword}
               />
-              <Pressable
-                style={{width: 20, borderBottomWidth: 2, borderColor: 'grey'}}
+             <Pressable
                 onPress={() => setHidePassword(!hidePassword)}>
                 {hidePassword ? (
-                  <Entypo
-                    style={{paddingBottom: 46, top: 30}}
-                    name="eye-with-line"
-                    color="maroon"
-                    size={20}
-                  />
+                  <View style={{width: 100, marginLeft:-20}}>
+                    <Entypo name="eye-with-line" color="maroon" size={20} />
+                  </View>
                 ) : (
-                  <Entypo
-                    style={{paddingBottom: 46, top: 30}}
-                    name="eye"
-                    color="maroon"
-                    size={20}
-                  />
+                  <View style={{width: 100, marginLeft:-20}}>
+                    <Entypo name="eye" color="maroon" size={20} />
+                  </View>
                 )}
               </Pressable>
             </View>

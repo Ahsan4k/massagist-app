@@ -20,9 +20,9 @@ PODS:
     - GoogleUtilities/Logger (~> 7.12)
   - FirebaseCoreExtension (10.21.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.21.0):
+  - FirebaseCoreInternal (10.22.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.21.0):
+  - FirebaseInstallations (10.22.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -1332,8 +1332,8 @@ SPEC CHECKSUMS:
   Firebase: 4453b799f72f625384dc23f412d3be92b0e3b2a0
   FirebaseCore: 74f647ad9739ea75112ce6c3b3b91f5488ce1122
   FirebaseCoreExtension: 1c044fd46e95036cccb29134757c499613f3f564
-  FirebaseCoreInternal: 43c1788eaeee9d1b97caaa751af567ce11010d00
-  FirebaseInstallations: 390ea1d10a4d02b20c965cbfd527ee9b3b412acb
+  FirebaseCoreInternal: bca337352024b18424a61e478460547d46c4c753
+  FirebaseInstallations: 763814908793c0da14c18b3dcffdec71e29ed55e
   FirebaseMessaging: b285329399cc6edd73b5b32864c68454177bcf3f
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 035f1e36e53b355cf70f6434d161b36e7d21fecd
@@ -1391,8 +1391,8 @@ SPEC CHECKSUMS:
   RNScreens: 2b73f5eb2ac5d94fbd61fa4be0bfebd345716825
   RNVectorIcons: ee070291bc6c7b4c880181b214534d4657ea1905
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  Yoga: 13c8ef87792450193e117976337b8527b49e8c03
+  Yoga: e64aa65de36c0832d04e8c7bd614396c77a80047
 
 PODFILE CHECKSUM: 8d85a9e170d05e7dc68031d8b973421a5da0afbb
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2
