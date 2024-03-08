@@ -245,6 +245,10 @@ const Book = props => {
           dayTextColor: 'blue',
           arrowColor: 'blue',
           todayTextColor: COLORS.primary,
+          selectedDayBackgroundColor: 'maroon',
+        }}
+        markedDates={{
+          [selectedDay.dateString]: {selected: true},
         }}
       />
       <View
@@ -325,11 +329,17 @@ const Book = props => {
                     ? moment(item, 'hh:mm A')
                         .add(30, 'minutes')
                         .format('hh:mm A')
-                    : item} -  {timeSlots[index+1] === timeSlots[index+1].slice(0, 2) + ':30' + ' ' + timeSlots[index+1].slice(6, 8)
-                    ? moment(timeSlots[index+1], 'hh:mm A')
+                    : item}{' '}
+                  -{' '}
+                  {timeSlots[index + 1] ===
+                  timeSlots[index + 1].slice(0, 2) +
+                    ':30' +
+                    ' ' +
+                    timeSlots[index + 1].slice(6, 8)
+                    ? moment(timeSlots[index + 1], 'hh:mm A')
                         .add(30, 'minutes')
                         .format('hh:mm A')
-                    : timeSlots[index+1]}
+                    : timeSlots[index + 1]}
                 </Text>
               ) : null}
             </TouchableOpacity>
