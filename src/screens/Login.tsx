@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   Pressable,
+  Platform,
 } from 'react-native';
 import React from 'react';
 import {useDispatch} from 'react-redux';
@@ -16,6 +17,7 @@ import InnerLoader from '../components/InnerLoader';
 import {post} from '../networkcalls/requests';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Entypo from 'react-native-vector-icons/Entypo';
+import messaging from '@react-native-firebase/messaging';
 
 const {width, height} = Dimensions.get('window');
 
@@ -48,9 +50,12 @@ const Login = props => {
     if (validator()) {
       setInnerLoading(true);
       try {
+        const getToken = await messaging().getToken();
+        console.log('fcmToken=============>', getToken);
         const response = await post('auth/login', {
           email: email.toLowerCase(),
           password: password,
+          fcmToken: getToken,
         });
         console.log(response?.data);
         if (response?.data?.success) {
@@ -62,13 +67,15 @@ const Login = props => {
         }
       } catch (error) {
         setInnerLoading(false);
-        console.log(error);
+        console.log('LoginError', error);
       }
     }
   };
 
   return (
-    <KeyboardAwareScrollView>
+    <KeyboardAwareScrollView
+      enableOnAndroid={true}
+      contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.view}>
         <Image
           source={require('../assets/loginIcon.png')}
@@ -90,7 +97,7 @@ const Login = props => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'flex-end',
-                width: width * 0.83,
+                width: width * 0.84,
               }}>
               <TextInput
                 style={styles.password}
@@ -99,14 +106,24 @@ const Login = props => {
                 placeholder="Enter Password"
                 secureTextEntry={hidePassword}
               />
-             <Pressable
+              <Pressable
+                style={{
+                  borderBottomWidth: 2,
+                  borderColor: 'grey',
+                }}
                 onPress={() => setHidePassword(!hidePassword)}>
                 {hidePassword ? (
-                  <View style={{width: 100, marginLeft:-20}}>
+                  <View
+                    style={{
+                      bottom: 15,
+                    }}>
                     <Entypo name="eye-with-line" color="maroon" size={20} />
                   </View>
                 ) : (
-                  <View style={{width: 100, marginLeft:-20}}>
+                  <View
+                    style={{
+                      bottom: 15,
+                    }}>
                     <Entypo name="eye" color="maroon" size={20} />
                   </View>
                 )}

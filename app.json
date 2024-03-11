@@ -1,4 +1,7 @@
 {
   "name": "massagistApp2",
-  "displayName": "massagistApp2"
+  "displayName": "massagistApp2",
+  "androidStatusBar": {
+    "backgroundColor": "#000000"
+  }
 }

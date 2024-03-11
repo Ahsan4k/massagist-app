@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "422409510733",
-    "project_id": "massagist-106af",
-    "storage_bucket": "massagist-106af.appspot.com"
+    "project_number": "146780919397",
+    "project_id": "massagist-e2d69",
+    "storage_bucket": "massagist-e2d69.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:422409510733:android:fe9ed793b575c084166104",
+        "mobilesdk_app_id": "1:146780919397:android:e5321e613ccc4e5c4e988c",
         "android_client_info": {
           "package_name": "com.massagistapp2"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAN-uN0iivpEduEAZ1KsW9Y1soEZQJ4PQk"
+          "current_key": "AIzaSyBnoueS5sRloJjFQLzZThl2p8GgRW-I4u0"
         }
       ],
       "services": {
