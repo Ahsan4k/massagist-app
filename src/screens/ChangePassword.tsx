@@ -94,7 +94,9 @@ const ChangePassword = props => {
       <View style={{marginHorizontal: 10}}>
         <BackButton onPress={() => props.navigation.goBack()} />
       </View>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        contentContainerStyle={{flexGrow: 1}}>
         <View style={{marginTop: width / 5, alignItems: 'center'}}>
           <Image
             source={require('../assets/loginIcon.png')}
@@ -118,13 +120,24 @@ const ChangePassword = props => {
                 secureTextEntry={hidePassword}
               />
               <Pressable
+                style={{
+                  borderBottomWidth: 2,
+                  borderColor: 'grey',
+                  marginTop: 45,
+                }}
                 onPress={() => setHidePassword(!hidePassword)}>
                 {hidePassword ? (
-                  <View style={{width: 100, marginLeft:-20}}>
+                  <View
+                    style={{
+                      bottom: 15,
+                    }}>
                     <Entypo name="eye-with-line" color="maroon" size={20} />
                   </View>
                 ) : (
-                  <View style={{width: 100, marginLeft:-20}}>
+                  <View
+                    style={{
+                      bottom: 15,
+                    }}>
                     <Entypo name="eye" color="maroon" size={20} />
                   </View>
                 )}

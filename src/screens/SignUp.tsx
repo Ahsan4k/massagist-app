@@ -9,6 +9,7 @@ import {
   Pressable,
   Alert,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import {phoneNumberRegex} from '../consts/baseUrl';
 import {post} from '../networkcalls/requests';
@@ -16,6 +17,7 @@ import InnerLoader from '../components/InnerLoader';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import MaskInput, {Masks} from 'react-native-mask-input';
 import Entypo from 'react-native-vector-icons/Entypo';
+import messaging from '@react-native-firebase/messaging';
 
 const {width, height} = Dimensions.get('window');
 
@@ -77,12 +79,14 @@ const SignUp = props => {
     if (validator()) {
       setInnerLoading(true);
       try {
+        const getToken = await messaging().getToken();
         const response = await post('auth/signup', {
           firstName: firstName,
           lastName: lastName,
           email: email.toLowerCase(),
           phoneNumber: phoneNumber,
           password: password,
+          fcmToken: getToken,
         });
         console.log(response?.data);
         if (response?.data?.success) {
@@ -108,7 +112,10 @@ const SignUp = props => {
       <Image source={require('../assets/loginIcon.png')} style={styles.logo} />
       <Text style={styles.head}>SignUp</Text>
       <View style={styles.inner}>
-        <KeyboardAwareScrollView extraHeight={-64}>
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          contentContainerStyle={{flexGrow: 1}}
+          extraHeight={-64}>
           <Text style={styles.text}>First Name</Text>
           <TextInput
             style={styles.email}
@@ -259,7 +266,7 @@ const styles = StyleSheet.create({
     width: width * 0.5,
     height: height * 0.05,
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,

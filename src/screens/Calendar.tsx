@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   book: {
-    marginTop: 20,
+    marginBottom: 10,
     alignSelf: 'center',
     backgroundColor: COLORS.primary,
     width: width * 0.9,
